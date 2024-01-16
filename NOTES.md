@@ -83,4 +83,13 @@ make SLEPC_DIR=/home/efefer/mysoftwares/slepc-3.20.1 PETSC_DIR=/home/efefer/myso
 ====================================
 ```
 
+# Build
+
+Set the environment variables:
+```
+export SLEPC_DIR=/home/efefer/mysoftwares/slepc-3.20.1
+export PETSC_DIR=/home/efefer/mysoftwares/petsc-3.20.3
+export PETSC_ARCH=""
+```
+
 
