@@ -1,6 +1,29 @@
+# Preliminary
+
 Tried on WSL2.
 
 Need to avoid path with spaces.
+
+# PETSc 3.5.4
+
+```
+python2 './configure' '--with-fc=0' '--download-mpich' '--with-scalar-type=complex'
+```
+
+```
+make PETSC_DIR=/home/efefer/parallel_c/petsc-3.5.4 PETSC_ARCH=arch-linux2-c-debug test
+```
+
+```
+Running test examples to verify correct installation
+Using PETSC_DIR=/home/efefer/parallel_c/petsc-3.5.4 and PETSC_ARCH=arch-linux2-c-debug
+C/C++ example src/snes/examples/tutorials/ex19 run successfully with 1 MPI process
+C/C++ example src/snes/examples/tutorials/ex19 run successfully with 2 MPI processes
+Completed test examples
+=========================================
+Now to evaluate the computer systems you plan use - do:
+make PETSC_DIR=/home/efefer/parallel_c/petsc-3.5.4 PETSC_ARCH=arch-linux2-c-debug streams NPMAX=<number of MPI processes you intend to use>
+```
 
 
 # PETSc
@@ -9,6 +32,12 @@ Configure
 ```
 ./configure --prefix=/home/efefer/mysoftwares/petsc-3.20.3
 ```
+
+Using scalar=complex
+```
+./configure --prefix=/home/efefer/mysoftwares/petsc-3.20.3-complex --with-scalar-type=complex
+```
+complex with int32
 
 
 At the end of `configure` process:
@@ -45,6 +74,14 @@ export PETSC_DIR=/home/efefer/mysoftwares/petsc-3.20.3
 export PETSC_ARCH=""
 ./configure --prefix=/home/efefer/mysoftwares/slepc-3.20.1
 ```
+
+Complex int32
+```
+export PETSC_DIR=/home/efefer/mysoftwares/petsc-3.20.3-complex
+export PETSC_ARCH=""
+./configure --prefix=/home/efefer/mysoftwares/slepc-3.20.1-complex
+```
+
 
 Important notice after successful configuration:
 ```
