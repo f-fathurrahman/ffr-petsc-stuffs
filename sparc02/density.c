@@ -1176,8 +1176,10 @@ void ChargDensB_TM_VecInit(SDDFT_OBJ* pSddft)
   PetscScalar pVpsArray_TM_KJmaI, pVpsArray_TM_KJpaI, pVpsArray_TM_KmaJI, pVpsArray_TM_KpaJI;
   int at;
   PetscInt i=0;
-  PetscInt j, k, xi, yj, zk, offset, tablesize, l, J, K, p;
-  PetscInt nzVps,nyVps,nxVps,i0,j0,k0,a,poscnt;
+  PetscInt j, k, xi, yj, zk, offset, p;
+  //PetscInt nzVps,nyVps,nxVps;
+  //PetscInt i0,j0,k0;
+  PetscInt a,poscnt;
   PetscInt index = 0;
   PetscScalar delta=pSddft->delta,x,y,z,r,cutoffr,rcut=pSddft->REFERENCE_CUTOFF;
   PetscInt n_x = pSddft->numPoints_x;
@@ -1275,9 +1277,9 @@ void ChargDensB_TM_VecInit(SDDFT_OBJ* pSddft)
     if(overlap)
       {
     
-        nzVps = zend-zstart+1+o*2;
-        nyVps = yend-ystart+1+o*2;
-        nxVps = xend-xstart+1+o*2;
+        //nzVps = zend-zstart+1+o*2;
+        //nyVps = yend-ystart+1+o*2;
+        //nxVps = xend-xstart+1+o*2;
         
         /*
          * use finite difference stencil and reference pseudopotential values to 
@@ -1367,8 +1369,10 @@ void PeriodicChargDensB_TM_VecInit(SDDFT_OBJ* pSddft)
   PetscScalar pVpsArray_TM_KJmaI, pVpsArray_TM_KJpaI, pVpsArray_TM_KmaJI, pVpsArray_TM_KpaJI;
   int at;
   PetscInt i=0;
-  PetscInt j, k, xi, yj, zk, offset, tablesize, l, J, K, p;
-  PetscInt nzVps,nyVps,nxVps,i0,j0,k0,a,poscnt,index=0;
+  PetscInt j, k, xi, yj, zk, offset, p;
+  //PetscInt nzVps, nyVps, nxVps;
+  //PetscInt i0,j0,k0;
+  PetscInt a,poscnt,index=0;
   PetscInt PP,QQ,RR;
   PetscInt Imax_x,Imin_x,Imax_y,Imin_y,Imax_z,Imin_z;
   PetscScalar delta=pSddft->delta,x,y,z,r,cutoffr,rcut=pSddft->REFERENCE_CUTOFF;
@@ -1495,9 +1499,9 @@ void PeriodicChargDensB_TM_VecInit(SDDFT_OBJ* pSddft)
       if(overlap)
         {
            
-          nzVps = zend-zstart+1+o*2;
-          nyVps = yend-ystart+1+o*2;
-          nxVps = xend-xstart+1+o*2;
+          //nzVps = zend-zstart+1+o*2;
+          //nyVps = yend-ystart+1+o*2;
+          //nxVps = xend-xstart+1+o*2;
       
           /*
            * use finite difference stencil and reference pseudopotential values to 
@@ -1561,12 +1565,14 @@ void PeriodicChargDensB_TM_VecInit(SDDFT_OBJ* pSddft)
    * check sign of reference pseudocharge density
    */
   VecSum(pSddft->chrgDensB_TM,&intb_TM);
-  assert( intb_TM < 0 );
+  assert( PetscRealPart(intb_TM) < 0 );
   intb_TM *= delta*delta*delta;
   PetscPrintf(PETSC_COMM_WORLD,"Total reference valence electronic charge: %.9f\n",intb_TM);
       
   return;
 } 
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //                          PseudopotReference: reference pseudopotential                    //
 //       Reference: Linear scaling solution of the all-electron Coulomb problem in solids;   //

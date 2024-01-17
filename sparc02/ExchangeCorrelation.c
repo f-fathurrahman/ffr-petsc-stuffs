@@ -20,12 +20,14 @@
   |-------------------------------------------------------------------------------------------*/
 #include "sddft.h"
 #include "petscsys.h"
-#include "math.h"
-#include <iostream>
+#include <math.h>
+
+#include <stdio.h>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //              Vxc_Calc_CA: LDA Ceperley-Alder Exchange-correlation potential               // 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,27 +93,27 @@ PetscErrorCode Vxc_Calc_CA_PW(SDDFT_OBJ* pSddft)
   for(k=zcor; k<zcor+lzdim; k++)
     for(j=ycor; j<ycor+lydim; j++)
       for(i=xcor; i<xcor+lxdim; i++)
-	{
-	  rhoi = rholc[k][j][i];
+  {
+    rhoi = rholc[k][j][i];
     
    
-	  if (rhoi==0)
-	    {
-	      Vxci = 0.0 ;	      
-	    }
-	  else
-	    {	
-	      Vxci = pow((0.75/(M_PI*rhoi)),(1.0/3.0)) ;
-	      Vxci = (-2.0*A*(1.0+alpha1*Vxci))*log(1.0+1.0/(2.0*A*(beta1*pow(Vxci,0.5) + beta2*Vxci + beta3*pow(Vxci,1.5) + beta4*pow(Vxci,(p+1.0))))) 
-		- (Vxci/3.0)*(-2.0*A*alpha1*log(1.0+1.0/(2.0*A*( beta1*pow(Vxci,0.5) + beta2*Vxci + beta3*pow(Vxci,1.5) + beta4*pow(Vxci,(p+1.0))))) 
-			      - ((-2.0*A*(1.0+alpha1*Vxci))*(A*( beta1*pow(Vxci,-0.5)+ 2.0*beta2 + 3.0*beta3*pow(Vxci,0.5) + 2.0*(p+1.0)*beta4*pow(Vxci,p) ))) 
-			      /((2.0*A*( beta1*pow(Vxci,0.5) + beta2*Vxci + beta3*pow(Vxci,1.5) + beta4*pow(Vxci,(p+1.0)) ) )*(2.0*A*( beta1*pow(Vxci,0.5) + beta2*Vxci + beta3*pow(Vxci,1.5) + beta4*pow(Vxci,(p+1.0)) ) )+(2.0*A*( beta1*pow(Vxci,0.5) + beta2*Vxci + beta3*pow(Vxci,1.5) + beta4*pow(Vxci,(p+1.0)) ) )) ) ;
-	      
-	    } 	
-	  Vxci = Vxci - C3*pow(rhoi,1.0/3.0) ;     
-	  Vxclc[k][j][i] = Vxci;    
+    if (rhoi==0)
+      {
+        Vxci = 0.0 ;        
+      }
+    else
+      {  
+        Vxci = pow((0.75/(M_PI*rhoi)),(1.0/3.0)) ;
+        Vxci = (-2.0*A*(1.0+alpha1*Vxci))*log(1.0+1.0/(2.0*A*(beta1*pow(Vxci,0.5) + beta2*Vxci + beta3*pow(Vxci,1.5) + beta4*pow(Vxci,(p+1.0))))) 
+    - (Vxci/3.0)*(-2.0*A*alpha1*log(1.0+1.0/(2.0*A*( beta1*pow(Vxci,0.5) + beta2*Vxci + beta3*pow(Vxci,1.5) + beta4*pow(Vxci,(p+1.0))))) 
+            - ((-2.0*A*(1.0+alpha1*Vxci))*(A*( beta1*pow(Vxci,-0.5)+ 2.0*beta2 + 3.0*beta3*pow(Vxci,0.5) + 2.0*(p+1.0)*beta4*pow(Vxci,p) ))) 
+            /((2.0*A*( beta1*pow(Vxci,0.5) + beta2*Vxci + beta3*pow(Vxci,1.5) + beta4*pow(Vxci,(p+1.0)) ) )*(2.0*A*( beta1*pow(Vxci,0.5) + beta2*Vxci + beta3*pow(Vxci,1.5) + beta4*pow(Vxci,(p+1.0)) ) )+(2.0*A*( beta1*pow(Vxci,0.5) + beta2*Vxci + beta3*pow(Vxci,1.5) + beta4*pow(Vxci,(p+1.0)) ) )) ) ;
+        
+      }   
+    Vxci = Vxci - C3*pow(rhoi,1.0/3.0) ;     
+    Vxclc[k][j][i] = Vxci;    
     
-	}
+  }
   
   DMDAVecRestoreArray(pSddft->da,pSddft->elecDensRho,&rholc);
   DMDAVecRestoreArray(pSddft->da,pSddft->Vxc,&Vxclc); 
@@ -125,7 +127,7 @@ PetscErrorCode Vxc_Calc_CA_PW(SDDFT_OBJ* pSddft)
 PetscErrorCode Exc_Calc_CA_PW(SDDFT_OBJ* pSddft)
 {
   PetscInt xcor,ycor,zcor,lxdim,lydim,lzdim,i,j,k;
-  PetscScalar delVol,A,alpha1,beta1,beta2,beta3,beta4,C2,Exc,rhoi,Ec,Ex,rs,p;
+  PetscScalar delVol,A,alpha1,beta1,beta2,beta3,beta4,C2,Exc,rhoi,Ec,Ex,p;
   Vec vecExc;
   PetscScalar ***rholc,***Exclc;
 
@@ -149,21 +151,21 @@ PetscErrorCode Exc_Calc_CA_PW(SDDFT_OBJ* pSddft)
   for(k=zcor; k<zcor+lzdim; k++)
     for(j=ycor; j<ycor+lydim; j++)
       for(i=xcor; i<xcor+lxdim; i++)
-	{
-	  rhoi = rholc[k][j][i];
-	  Ex = -C2*pow(rhoi,1.0/3.0);
-	
-	  if (rhoi==0)
-	    {
-	      Ec = 0.0 ;
-	    }
-	  else
-	    {
-	      Ec = pow(0.75/(M_PI*rhoi),(1.0/3.0));
-	      Ec = -2.0*A*(1.0+alpha1*Ec)*log(1.0+1.0/(2.0*A*( beta1*pow(Ec,0.5) + beta2*Ec + beta3*pow(Ec,1.5) + beta4*pow(Ec,(p+1.0))))) ; 
-	    }    
-	  Exclc[k][j][i] = Ex+Ec; 
-	}
+  {
+    rhoi = rholc[k][j][i];
+    Ex = -C2*pow(rhoi,1.0/3.0);
+  
+    if (rhoi==0)
+      {
+        Ec = 0.0 ;
+      }
+    else
+      {
+        Ec = pow(0.75/(M_PI*rhoi),(1.0/3.0));
+        Ec = -2.0*A*(1.0+alpha1*Ec)*log(1.0+1.0/(2.0*A*( beta1*pow(Ec,0.5) + beta2*Ec + beta3*pow(Ec,1.5) + beta4*pow(Ec,(p+1.0))))) ; 
+      }    
+    Exclc[k][j][i] = Ex+Ec; 
+  }
        
   DMDAVecRestoreArray(pSddft->da,pSddft->elecDensRho,&rholc); 
   DMDAVecRestoreArray(pSddft->da,vecExc,&Exclc);
@@ -203,29 +205,29 @@ PetscErrorCode Vxc_Calc_CA_PZ(SDDFT_OBJ* pSddft)
   for(k=zcor; k<zcor+lzdim; k++)
     for(j=ycor; j<ycor+lydim; j++)
       for(i=xcor; i<xcor+lxdim; i++)
-	{
-	  rhoi = rholc[k][j][i];
+  {
+    rhoi = rholc[k][j][i];
     
    
-	  if (rhoi==0)
-	    {
-	      Vxci = 0.0 ;	     
-	    }
-	  else
-	    {	     
-	      rs = pow(0.75/(M_PI*rhoi),(1.0/3.0));
-	      if (rs<1.0)
-		{
-		  Vxci = log(rs)*(A+(2.0/3.0)*C*rs) + (B-(1.0/3.0)*A) + (1.0/3.0)*(2.0*D-C)*rs; 
-		}
-	      else
-		{
-		  Vxci = (gamma1 + (7.0/6.0)*gamma1*beta1*pow(rs,0.5) + (4.0/3.0)*gamma1*beta2*rs)/pow(1+beta1*pow(rs,0.5)+beta2*rs,2.0) ;		  
-		}
-	    } 	
-	  Vxci = Vxci - C3*pow(rhoi,1.0/3.0) ;     
-	  Vxclc[k][j][i] = Vxci;        
-	}
+    if (rhoi==0)
+      {
+        Vxci = 0.0 ;       
+      }
+    else
+      {       
+        rs = pow(0.75/(M_PI*rhoi),(1.0/3.0));
+        if( PetscRealPart(rs) < 1.0)
+    {
+      Vxci = log(rs)*(A+(2.0/3.0)*C*rs) + (B-(1.0/3.0)*A) + (1.0/3.0)*(2.0*D-C)*rs; 
+    }
+        else
+    {
+      Vxci = (gamma1 + (7.0/6.0)*gamma1*beta1*pow(rs,0.5) + (4.0/3.0)*gamma1*beta2*rs)/pow(1+beta1*pow(rs,0.5)+beta2*rs,2.0) ;      
+    }
+      }   
+    Vxci = Vxci - C3*pow(rhoi,1.0/3.0) ;     
+    Vxclc[k][j][i] = Vxci;        
+  }
   
   DMDAVecRestoreArray(pSddft->da,pSddft->elecDensRho,&rholc);
   DMDAVecRestoreArray(pSddft->da,pSddft->Vxc,&Vxclc); 
@@ -261,28 +263,28 @@ PetscErrorCode Exc_Calc_CA_PZ(SDDFT_OBJ* pSddft)
   for(k=zcor; k<zcor+lzdim; k++)
     for(j=ycor; j<ycor+lydim; j++)
       for(i=xcor; i<xcor+lxdim; i++)
-	{
-	  rhoi = rholc[k][j][i];
-	  Ex = -C2*pow(rhoi,1.0/3.0);
-	
-	  if (rhoi==0)
-	    {
-	      Ec = 0.0 ;
-	    }
-	  else
-	    {
-	      rs = pow(0.75/(M_PI*rhoi),(1.0/3.0));
-	      if (rs<1.0)
-		{
-		  Ec = A*log(rs) + B + C*rs*log(rs) + D*rs ;
-		}
-	      else
-		{
-		  Ec = gamma1/(1.0+beta1*pow(rs,0.5)+beta2*rs) ;
-		}
-	    }    
-	  Exclc[k][j][i] = Ex+Ec; 
-	}
+  {
+    rhoi = rholc[k][j][i];
+    Ex = -C2*pow(rhoi,1.0/3.0);
+  
+    if (rhoi==0)
+      {
+        Ec = 0.0 ;
+      }
+    else
+      {
+        rs = pow(0.75/(M_PI*rhoi),(1.0/3.0));
+        if( PetscRealPart(rs) < 1.0 )
+    {
+      Ec = A*log(rs) + B + C*rs*log(rs) + D*rs ;
+    }
+        else
+    {
+      Ec = gamma1/(1.0+beta1*pow(rs,0.5)+beta2*rs) ;
+    }
+      }    
+    Exclc[k][j][i] = Ex+Ec; 
+  }
        
   DMDAVecRestoreArray(pSddft->da,pSddft->elecDensRho,&rholc); 
   DMDAVecRestoreArray(pSddft->da,vecExc,&Exclc);

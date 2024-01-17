@@ -55,7 +55,7 @@ void SystemEnergy_Calc(SDDFT_OBJ* pSddft)
   for(i=0; i<pSddft->Nstates; i++)
     {
       gn = smearing_FermiDirac(pSddft->Beta,pSddft->lambda[i],pSddft->lambda_f);       
-      if(fabs(1.0-gn)>1e-14 && gn>1e-14)
+      if( fabs(1.0-gn) > 1e-14 && PetscRealPart(gn) > 1e-14)
 	{
 	  Entropy = Entropy + (gn*log(gn) + (1.0-gn)*log(1.0-gn));
 	}
@@ -120,7 +120,7 @@ void kPointSystemEnergy_Calc(SDDFT_OBJ* pSddft)
     for(i=0;i<pSddft->Nstates; i++)
       {
 	gnk = smearing_FermiDirac(pSddft->Beta,pSddft->lambdakpt[k][i],pSddft->lambda_f);     
-	if(fabs(1.0-gnk)>1e-14 && gnk>1e-14)
+	if(fabs(1.0-gnk)>1e-14 && PetscRealPart(gnk) > 1e-14)
 	  {	 
 	    Entropy = Entropy + pSddft->kptWts[k]*(gnk*log(gnk) + (1.0-gnk)*log(1.0-gnk));
 	  }
@@ -258,7 +258,7 @@ void ConstShift_Calc(SDDFT_OBJ* pSddft)
   PetscScalar *pAtompos; 
   PetscScalar *YD=NULL;
   PetscScalar Dtemp;  
-  PetscInt I,J,K;
+  PetscInt Ii, J, K;
   PetscScalar R_x = pSddft->range_x;
   PetscScalar R_y = pSddft->range_y;
   PetscScalar R_z = pSddft->range_z;
@@ -275,7 +275,7 @@ void ConstShift_Calc(SDDFT_OBJ* pSddft)
    * Difference in pseudopotentials at the leftmost corner node is calculated.
    * This is the first entry of a DMDA vector.
    */
-  I=0;J=0;K=0;
+  Ii=0; J=0; K=0;
   VecGetArray(pSddft->Atompos,&pAtompos);
   for(at=0;at<pSddft->Ntype;at++)
     {
@@ -289,7 +289,7 @@ void ConstShift_Calc(SDDFT_OBJ* pSddft)
 	tableVps[count] = pSddft->psd[at].Vloc[count-1]; 
 	count++;
 
-      }while(tableR[count-1] <= pSddft->CUTOFF[at]+4.0);
+      }while( PetscRealPart(tableR[count-1]) <= pSddft->CUTOFF[at]+4.0);
       rmax = tableR[count-1];
 	 
       int start,end;
@@ -336,7 +336,7 @@ void ConstShift_Calc(SDDFT_OBJ* pSddft)
 		    {
 		      Vps = Vps+tableVps[0];
 		    }
-		  else if(r > rmax)
+		  else if( PetscRealPart(r) > PetscRealPart(rmax) )
 		    {
 		      Vps = Vps-pSddft->noe[at]/r;
 		    }
