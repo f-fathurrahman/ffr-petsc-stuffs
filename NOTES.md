@@ -4,6 +4,22 @@ Tried on WSL2.
 
 Need to avoid path with spaces.
 
+# PETSc 3.12.5
+
+./configure --prefix=/home/efefer/mysoftwares/petsc-3.12.5
+
+make PETSC_DIR=/home/efefer/parallel_c/petsc-3.12.5 PETSC_ARCH=arch-linux-c-debug all
+
+make PETSC_DIR=/home/efefer/parallel_c/petsc-3.12.5 PETSC_ARCH=arch-linux-c-debug install
+
+```
+Install complete.
+Now to check if the libraries are working do (in current directory):
+make PETSC_DIR=/home/efefer/mysoftwares/petsc-3.12.5 PETSC_ARCH="" test
+```
+
+
+
 # PETSc 3.5.4
 
 ```
