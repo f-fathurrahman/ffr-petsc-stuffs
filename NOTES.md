@@ -12,11 +12,26 @@ make PETSC_DIR=/home/efefer/parallel_c/petsc-3.12.5 PETSC_ARCH=arch-linux-c-debu
 
 make PETSC_DIR=/home/efefer/parallel_c/petsc-3.12.5 PETSC_ARCH=arch-linux-c-debug install
 
+
+Using optimized setting
+```
+./configure --prefix=/home/efefer/mysoftwares/petsc-3.12.5_opt --with-fc=0 --with-debugging=0
+
+make PETSC_DIR=/home/efefer/mysoftwares/petsc-3.12.5_opt PETSC_ARCH="" test
+```
+
+
 ```
 Install complete.
 Now to check if the libraries are working do (in current directory):
 make PETSC_DIR=/home/efefer/mysoftwares/petsc-3.12.5 PETSC_ARCH="" test
 ```
+
+
+./configure --prefix=/home/efefer/mysoftwares/petsc-3.12.5_mpich --download-mpich
+
+make PETSC_DIR=/home/efefer/mysoftwares/petsc-3.12.5_mpich PETSC_ARCH="" test
+
 
 
 
