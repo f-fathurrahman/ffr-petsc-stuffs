@@ -1,7 +1,7 @@
-CPPFLAGS = -I/home/efefer/mysoftwares/petsc-3.12.5/include
+CPPFLAGS = -I/home/efefer/mysoftwares/petsc-3.12.5_opt/include
 
-LDLIBS  = -Wl,-rpath,/home/efefer/mysoftwares/petsc-3.12.5/lib \
--L/home/efefer/mysoftwares/petsc-3.12.5/lib \
+LDLIBS  = -Wl,-rpath,/home/efefer/mysoftwares/petsc-3.12.5_opt/lib \
+-L/home/efefer/mysoftwares/petsc-3.12.5_opt/lib \
 -Wl,-rpath,/usr/lib/x86_64-linux-gnu/openmpi/lib \
 -L/usr/lib/x86_64-linux-gnu/openmpi/lib -Wl,-rpath,/usr/lib/gcc/x86_64-linux-gnu/9 \
 -L/usr/lib/gcc/x86_64-linux-gnu/9 -Wl,-rpath,/usr/lib/x86_64-linux-gnu \
@@ -11,9 +11,11 @@ LDLIBS  = -Wl,-rpath,/home/efefer/mysoftwares/petsc-3.12.5/lib \
 -ldl -lmpi_usempif08 -lmpi_usempi_ignore_tkr -lmpi_mpifh -lmpi -lgfortran \
 -lm -lgfortran -lm -lgcc_s -lquadmath -lpthread -lquadmath -lstdc++ -ldl
 
-CFLAGS = -fPIC -Wall -Wwrite-strings -Wno-strict-aliasing \
+#CFLAGS = -fPIC -Wall -Wwrite-strings -Wno-strict-aliasing \
 -Wno-unknown-pragmas -fstack-protector -fvisibility=hidden -g3  -fPIC -Wall -Wwrite-strings \
 -Wno-strict-aliasing -Wno-unknown-pragmas -fstack-protector -fvisibility=hidden -g3
+
+CFLAGS = -Wall -O3
 
 MY_OBJS = 
 

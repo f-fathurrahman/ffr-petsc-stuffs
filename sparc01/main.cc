@@ -55,7 +55,7 @@ int main( int argc, char **argv )
   /*
    * destroy variables to free memory
    */ 
-  //Objects_Destroy(&sddft);
+  Objects_Destroy(&sddft);
  
   ierr = PetscFinalize();CHKERRQ(ierr);
  

@@ -59,7 +59,7 @@ PetscErrorCode CalculateDensity(SDDFT_OBJ* pSddft,Mat* Psi)
   PetscInt Nstates=pSddft->Nstates;
   PetscScalar elecno,rhosum;
   PetscInt rowStart,rowEnd;
-  int i,j,rank,ierr;
+  int i,j,rank;
   IS irow,icol;
   PetscScalar gi;
   PetscScalar *arrPsiSeq;
@@ -236,8 +236,7 @@ PetscErrorCode RotatePsi(SDDFT_OBJ* pSddft, Mat* Psi, Mat* Q, Mat* PsiQ)
   IS irow,icol;
   double alpha,beta;
   PetscScalar *arrPsiSeq,*arrPsiQSeq,*arrQ;
-  int i,rank;
-  PetscInt *idxm,*idxn;
+  int rank;
   PetscInt Nstates=pSddft->Nstates;
   int M,N,K;
   alpha=1.0; beta=0.0;

@@ -109,7 +109,7 @@ PetscErrorCode Vxc_Calc_CA_PW(SDDFT_OBJ* pSddft)
 PetscErrorCode Exc_Calc_CA_PW(SDDFT_OBJ* pSddft)
 {
   PetscInt xcor,ycor,zcor,lxdim,lydim,lzdim,i,j,k;
-  PetscScalar delVol,A,alpha1,beta1,beta2,beta3,beta4,C2,Exc,rhoi,Ec,Ex,rs,p;
+  PetscScalar delVol,A,alpha1,beta1,beta2,beta3,beta4,C2,Exc,rhoi,Ec,Ex,p;
   Vec vecExc;
   PetscScalar ***rholc,***Exclc;
 

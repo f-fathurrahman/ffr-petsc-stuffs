@@ -45,7 +45,7 @@ typedef struct
   PetscInt lmax; ///< maximum pseudopotential component
   PetscInt size; ///< size of the arrays storing the pseudopotentials
 
-}PSD_OBJ;
+} PSD_OBJ;
 
 /*
  * structure storing the variables required by the functions of SPARC 
@@ -162,5 +162,6 @@ typedef struct
 
   PSD_OBJ *psd; ///< datatype for the pseudopotentials. This is defined for each type of atom.
      
-}SDDFT_OBJ;
+} SDDFT_OBJ;
+
 #endif

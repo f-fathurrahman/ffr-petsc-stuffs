@@ -257,8 +257,9 @@ PetscErrorCode SDDFT_Nonperiodic(SDDFT_OBJ *pSddft) {
    */
   ierr = Objects_Create(pSddft);
   CHKERRQ(ierr);
-  PetscPrintf(PETSC_COMM_WORLD, "BREAK HERE");
-  exit(0);
+  
+  //PetscPrintf(PETSC_COMM_WORLD, "BREAK HERE by ffr");
+  //exit(0);
 
   Laplace_matInit(pSddft);
   Gradient_matInit(pSddft);

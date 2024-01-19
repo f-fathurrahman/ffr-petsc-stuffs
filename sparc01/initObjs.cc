@@ -61,26 +61,28 @@ PetscErrorCode Objects_Create(SDDFT_OBJ *pSddft) {
   PetscMPIInt comm_size;
   PetscErrorCode ierr;
 
+  PetscPrintf(PETSC_COMM_WORLD, "num_points = %d, %d, %d\n", n_x, n_y, n_z);
+  PetscPrintf(PETSC_COMM_WORLD, "order = %d\n", o);
+
 
   ierr =
   DMDACreate3d(PETSC_COMM_WORLD, DM_BOUNDARY_GHOSTED, DM_BOUNDARY_GHOSTED, DM_BOUNDARY_GHOSTED,
                DMDA_STENCIL_STAR, n_x, n_y, n_z, PETSC_DECIDE, PETSC_DECIDE, PETSC_DECIDE, 1, o, 0,
                0, 0, &pSddft->da);
-  PetscPrintf(PETSC_COMM_WORLD, "ierr DMDA da = %d\n", ierr);
   CHKERRQ(ierr);
+
+  ierr = DMSetUp(pSddft->da); CHKERRQ(ierr);
 
   ierr =
   DMDACreate3d(PETSC_COMM_WORLD, DM_BOUNDARY_GHOSTED, DM_BOUNDARY_GHOSTED, DM_BOUNDARY_GHOSTED,
                DMDA_STENCIL_STAR, n_x, n_y, n_z, PETSC_DECIDE, PETSC_DECIDE, PETSC_DECIDE, 1, o, 0,
                0, 0, &pSddft->da_grad);
-  PetscPrintf(PETSC_COMM_WORLD, "ierr DMDA da_grad = %d\n", ierr);
   CHKERRQ(ierr);
 
-  ierr =
-  DMCreateGlobalVector(pSddft->da, &pSddft->elecDensRho); // error
-  CHKERRQ(ierr);
+  ierr = DMSetUp(pSddft->da_grad); CHKERRQ(ierr);
 
-/*
+  ierr = DMCreateGlobalVector(pSddft->da, &pSddft->elecDensRho); // error
+  CHKERRQ(ierr);
 
   VecDuplicate(pSddft->elecDensRho, &pSddft->SuperposAtRho);
   VecDuplicate(pSddft->elecDensRho, &pSddft->chrgDensB);
@@ -146,8 +148,6 @@ PetscErrorCode Objects_Create(SDDFT_OBJ *pSddft) {
   DMDAGetCorners(pSddft->da, &xcor, &ycor, &zcor, &lxdim, &lydim, &lzdim);
   PetscMalloc(sizeof(PetscInt) * (lzdim * lydim * lxdim), &pSddft->nnzDArray);
   PetscMalloc(sizeof(PetscInt) * (lzdim * lydim * lxdim), &pSddft->nnzODArray);
-
-*/
 
 
   PetscPrintf(PETSC_COMM_WORLD, "-------------------\n");
@@ -244,7 +244,6 @@ PetscErrorCode Gradient_matInit(SDDFT_OBJ *pSddft) {
    * creates gradient_x, gradient_y and gradient_z operators
    */
   PetscInt i, j, k, l, colidx, gxdim, gydim, gzdim, xcor, ycor, zcor, lxdim, lydim, lzdim;
-  PetscInt qq;
   MatStencil row;
   MatStencil *col_x;
   MatStencil *col_y;
@@ -324,7 +323,7 @@ PetscErrorCode Gradient_matInit(SDDFT_OBJ *pSddft) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void ChargDensB_cutoff(SDDFT_OBJ *pSddft) {
   PetscScalar delta = pSddft->delta;
-  PetscScalar ***pVpsArray, ***pBJArray, ***weights, rmax, MaxRadius = 15.0;
+  PetscScalar ***pVpsArray, ***pBJArray, rmax, MaxRadius = 15.0;
   PetscScalar tableR[MAX_TABLE_SIZE], tableVps[MAX_TABLE_SIZE], *YD = NULL;
   PetscScalar x, y, z, r, coeffs[MAX_ORDER + 1], Dtemp, Bint, Rcut, error, val;
   PetscInt i, j, k, at, p, a, lloc;
@@ -508,10 +507,8 @@ PetscErrorCode Wavefunctions_MatInit(SDDFT_OBJ *pSddft) {
 
   PetscInt Nstates = pSddft->Nstates;
   PetscInt xm, ym, zm;
-  PetscInt start, end;
 
   PetscErrorCode ierr;
-  PetscInt Npts = pSddft->numPoints_x * pSddft->numPoints_y * pSddft->numPoints_z;
 
   DMDAGetCorners(pSddft->da, 0, 0, 0, &zm, &ym, &xm);
   MatCreate(PetscObjectComm((PetscObject)pSddft->da), &pSddft->XOrb);
@@ -552,6 +549,7 @@ PetscErrorCode Wavefunctions_MatInit(SDDFT_OBJ *pSddft) {
 
   PetscTime(&t2);
   elapsed_time = t2 - t1;
+  PetscPrintf(PETSC_COMM_WORLD, "elapsed_time = %d\n", elapsed_time);
 
   MatMatMultNumeric(pSddft->HamiltonianOpr, pSddft->XOrb, pSddft->YOrb);
 

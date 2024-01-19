@@ -24,8 +24,7 @@ PetscScalar SelfConsistentField(SDDFT_OBJ* pSddft)
   int count=0,mixCtr,SCFcount=1;
   PetscScalar EigenMin,EigenMax,lambda_cutoff=0.0;
   PetscInt Nstates = pSddft->Nstates;   
-  PetscErrorCode ierr;
-  PetscInt *idxn;
+  //PetscErrorCode ierr;
   Vec tempVec,Veff_temp;   
   PetscScalar Cst = 1.0/27.211384523;
 
@@ -34,7 +33,6 @@ PetscScalar SelfConsistentField(SDDFT_OBJ* pSddft)
   PetscScalar error=1.0,norm1,norm2;    
   Mat Msub,Hsub;
   PetscScalar *arrHsub,*arrMsub;
-  int i;
    
   PetscPrintf(PETSC_COMM_WORLD,"***************************************************************************\n");
   PetscPrintf(PETSC_COMM_WORLD,"                          Self Consistent Field                            \n");
@@ -171,7 +169,7 @@ PetscErrorCode ProjectMatrices(SDDFT_OBJ* pSddft, Mat* Psi,Mat *Hsub,Mat* Msub)
   int M,N,K;
   double alpha,beta;
   PetscInt rowStart,rowEnd;
-  int i,rank,ierr;
+  int rank,ierr;
   IS irow,icol;
   PetscScalar *arrSubMat,*arrPsiSeq,*arrHPsiSeq;
   alpha=1.0; beta=0.0;
