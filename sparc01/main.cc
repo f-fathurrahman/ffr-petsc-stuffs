@@ -1,18 +1,18 @@
 /*=============================================================================================
-  | Simulation Package for Ab-initio Real-space Calculations (SPARC) 
+  | Simulation Package for Ab-initio Real-space Calculations (SPARC)
   | Copyright (C) 2016 Material Physics & Mechanics Group at Georgia Tech.
   |
   | S. Ghosh, P. Suryanarayana, SPARC: Accurate and efficient finite-difference formulation and
   | parallel implementation of Density Functional Theory. Part I: Isolated clusters, Computer
   | Physics Communications
   |
-  | file name: main.cc          
+  | file name: main.cc
   |
   | Description: This file contains the "main" function.
   |
   | Authors: Swarnava Ghosh, Phanish Suryanarayana
   |
-  | Last Modified: 1/26/2016   
+  | Last Modified: 1/26/2016
   |-------------------------------------------------------------------------------------------*/
 static char help[] = " Simulation Package for Ab-initio Real-space Calculations (SPARC) \n\
 options:\n\
@@ -29,13 +29,12 @@ options:\n\
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //                              main: the main function                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////
-int main( int argc, char **argv )
-{
-  int ierr; 
+int main(int argc, char **argv) {
+  int ierr;
   SDDFT_OBJ sddft;
-  
-  PetscLogDouble t1,t2,elapsed_time;    
-  PetscInitialize(&argc, &argv, (char*)0, help);  
+
+  PetscLogDouble t1, t2, elapsed_time;
+  PetscInitialize(&argc, &argv, (char *)0, help);
   SddftObjInitialize(&sddft);
   /*
    * read files
@@ -43,7 +42,7 @@ int main( int argc, char **argv )
   Read_parameters(&sddft);
   Read_ion(&sddft);
   Read_relax(&sddft);
-  Read_pseudopotential(&sddft); 
+  Read_pseudopotential(&sddft);
   /*
    * calculate pseudocharge cutoff
    */
@@ -54,13 +53,11 @@ int main( int argc, char **argv )
   SDDFT_Nonperiodic(&sddft);
   /*
    * destroy variables to free memory
-   */ 
+   */
   Objects_Destroy(&sddft);
- 
-  ierr = PetscFinalize();CHKERRQ(ierr);
- 
+
+  ierr = PetscFinalize();
+  CHKERRQ(ierr);
+
   return 0;
 }
-
-
- 

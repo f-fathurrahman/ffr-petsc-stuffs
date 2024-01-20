@@ -17,7 +17,11 @@ LDLIBS  = -Wl,-rpath,/home/efefer/mysoftwares/petsc-3.12.5_opt/lib \
 
 CFLAGS = -Wall -O3
 
-MY_OBJS = 
+MY_OBJS = \
+my_SddftObjInitialize.o \
+my_Read_parameters.o my_Read_ion.o my_Read_relax.o my_Read_pseudopotential.o \
+my_Objects_Create.o
+
 
 OBJLIBS = \
 ExchangeCorrelation.o  density.o  forces.o    \
