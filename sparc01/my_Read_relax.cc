@@ -1,3 +1,8 @@
+#include <iostream>
+#include "isddft.h"
+
+using namespace std;
+
 // Read_relax: reads the .relax file for constraint on movement of atoms
 void my_Read_relax(SDDFT_OBJ *pSddft) {
   FILE *fConfFile;

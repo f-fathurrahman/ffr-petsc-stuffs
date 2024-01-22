@@ -1,5 +1,8 @@
 #include <petsc.h>
+#include <iostream>
 #include "isddft.h"
+
+using namespace std;
 
 // Read_ion: Reads the .ion file for ionic positions
 void my_Read_ion(SDDFT_OBJ *pSddft) {
