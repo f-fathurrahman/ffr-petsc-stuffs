@@ -2,8 +2,8 @@ set -x
 
 basnam=`basename $1 .c`
 
-PETSC_HOME="/home/efefer/mysoftwares/petsc-3.20.3"
-SLEPC_HOME="/home/efefer/mysoftwares/slepc-3.20.1"
+PETSC_HOME="../install/petsc-3.24.2_opt"
+SLEPC_HOME="../install/slepc-3.24.1_opt"
 # Probably it doesn't have to be this long
 LIB_OTHER="-Wl,-rpath,/usr/lib/x86_64-linux-gnu/openmpi/lib -L/usr/lib/x86_64-linux-gnu/openmpi/lib \
 -Wl,-rpath,/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9 \
@@ -19,4 +19,4 @@ mpicc -fPIC -Wall -Wwrite-strings -Wno-unknown-pragmas -Wno-lto-type-mismatch -f
 -Wl,-rpath,${PETSC_HOME}/lib -L${PETSC_HOME}/lib \
 -Wl,-rpath,${SLEPC_HOME}/lib -L${SLEPC_HOME}/lib \
 ${LIB_OTHER} \
--o ${basnam}_debug.x
+-o ${basnam}_opt.x

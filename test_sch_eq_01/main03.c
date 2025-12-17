@@ -26,7 +26,7 @@ int main(int argc,char **argv)
   DMSetFromOptions(da);
   DMSetUp(da);
 
-    Mat H;
+  Mat H;
   DMCreateMatrix(da, &H);
 
   PetscInt xs, ys, zs, xm, ym, zm;
@@ -103,15 +103,15 @@ int main(int argc,char **argv)
   EPSGetConverged(eps,&nconv);
   PetscPrintf(PETSC_COMM_WORLD,"Converged eigenpairs: %d\n",nconv);
 
-    for (i=0; i<PetscMin(nconv,5); i++) {
-        PetscScalar eig;
-        EPSGetEigenvalue(eps,i,&eig,NULL);
-        PetscPrintf(PETSC_COMM_WORLD,"E[%d] = %g\n",i,(double)PetscRealPart(eig));
-    }
+  for (i=0; i < nconv; i++) {
+    PetscScalar eig;
+    EPSGetEigenvalue(eps,i,&eig,NULL);
+    PetscPrintf(PETSC_COMM_WORLD,"E[%d] = %g\n",i,(double)PetscRealPart(eig));
+  }
 
-    EPSDestroy(&eps);
-    MatDestroy(&H);
-    SlepcFinalize();
-    return 0;
+  EPSDestroy(&eps);
+  MatDestroy(&H);
+  SlepcFinalize();
+  return 0;
 }
 
