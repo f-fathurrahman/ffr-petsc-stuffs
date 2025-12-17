@@ -4,6 +4,36 @@ Tried on WSL2.
 
 Need to avoid path with spaces.
 
+# PETSc 3.24.2
+
+```
+./configure --prefix=/home/efefer/WORKS/my_github_repos/ffr-petsc-stuffs/install/petsc-3.24.2_opt --with-fc=0 --with-debugging=0
+```
+
+```
+ make PETSC_DIR=/mnt/d/WORKS/my_github_repos/ffr-petsc-stuffs/sources/petsc-3.24.2 PETSC_ARCH=arch-linux-c-opt install
+*** Installing PETSc at prefix location: /home/efefer/WORKS/my_github_repos/ffr-petsc-stuffs/install/petsc-3.24.2_opt  ***
+
+====================================
+To check if the libraries are working do (in current directory):
+make PETSC_DIR=/home/efefer/WORKS/my_github_repos/ffr-petsc-stuffs/install/petsc-3.24.2_opt PETSC_ARCH="" check
+====================================
+/usr/bin/make --no-print-directory -f makefile PETSC_ARCH=arch-linux-c-opt PETSC_DIR=/mnt/d/WORKS/my_github_repos/ffr-petsc-stuffs/sources/petsc-3.24.2 PETSC_INSTALL=install install-builtafterpetsc
+*** Install of PETSc (and any other packages) complete ***
+```
+
+# SLEPc 3.24.1
+
+```
+export PETSC_DIR=PETSC_DIR=/home/efefer/WORKS/my_github_repos/ffr-petsc-stuffs/install/petsc-3.24.2_opt
+export PETSC_ARCH=""
+./configure --prefix=/home/efefer/WORKS/my_github_repos/ffr-petsc-stuffs/install/slepc-3.24.1_opt --with-clean
+```
+? No need for passing `--with-fc=0 --with-debugging=0` Probably read from PETSc
+
+
+
+
 # PETSc 3.12.5
 
 ./configure --prefix=/home/efefer/mysoftwares/petsc-3.12.5
@@ -57,11 +87,11 @@ make PETSC_DIR=/home/efefer/parallel_c/petsc-3.5.4 PETSC_ARCH=arch-linux2-c-debu
 ```
 
 
-# PETSc
+# PETSc 3.20.3
 
 Configure
 ```
-./configure --prefix=/home/efefer/mysoftwares/petsc-3.20.3
+./configure --prefix=/home/efefer/mysoftwares/petsc-3.20.3 --
 ```
 
 Using scalar=complex
