@@ -263,10 +263,8 @@ void Solve_ElectronicStructureProblem(SDDFT_OBJ *pSddft) {
 //                         Agonizing Pain, Jonathan Richard Shewchuk //
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void NLCG_relaxAtoms(SDDFT_OBJ *pSddft) {
-  PetscInt i = 0, j, k = 0, imax = pSddft->MAXIT_NLCG, jmax = 6, n = 30,
-           jsum = 0;
-  PetscScalar deltaNew, deltad, deltaOld, deltaMid, tol1,
-      tol2 = 1e-10, sigma0 = 0.5, alpha, etaPrev, eta, beta;
+  PetscInt i = 0, j, k = 0, imax = pSddft->MAXIT_NLCG, jmax = 6, n = 30, jsum = 0;
+  PetscScalar deltaNew, deltad, deltaOld, deltaMid, tol1, tol2 = 1e-10, sigma0 = 0.5, alpha, etaPrev, eta, beta;
   Vec r, d, s, y, F;
   int inCtr;
 
@@ -288,7 +286,7 @@ void NLCG_relaxAtoms(SDDFT_OBJ *pSddft) {
   VecCopy(s, d);
   VecDot(r, d, &deltaNew);
 
-  while ((i < imax) && ( PetscRealPart(deltaNew) > PetscRealPart(tol1) )) {
+  while ((i < imax) && (PetscRealPart(deltaNew) > PetscRealPart(tol1))) {
     PetscPrintf(PETSC_COMM_WORLD, "---------------------------------------\n");
     PetscPrintf(PETSC_COMM_WORLD, " \n (Outer) Relaxation step: %d \n", i + 1);
     PetscPrintf(PETSC_COMM_WORLD, "-------------------------------------- \n");
@@ -329,12 +327,9 @@ void NLCG_relaxAtoms(SDDFT_OBJ *pSddft) {
      * line search
      */
     do {
-      PetscPrintf(PETSC_COMM_WORLD,
-                  "---------------------------------------\n");
-      PetscPrintf(PETSC_COMM_WORLD, "\n  (Inner) Relaxation step: %d \n",
-                  j + 1);
-      PetscPrintf(PETSC_COMM_WORLD,
-                  "---------------------------------------\n");
+      PetscPrintf(PETSC_COMM_WORLD, "---------------------------------------\n");
+      PetscPrintf(PETSC_COMM_WORLD, "\n  (Inner) Relaxation step: %d \n", j + 1);
+      PetscPrintf(PETSC_COMM_WORLD, "---------------------------------------\n");
 
       if (inCtr == 0) {
         VecDot(r, d, &eta);
@@ -364,10 +359,9 @@ void NLCG_relaxAtoms(SDDFT_OBJ *pSddft) {
       etaPrev = eta;
       j++;
       inCtr++;
-      PetscPrintf(PETSC_COMM_WORLD,
-                  "************************************** \n");
+      PetscPrintf(PETSC_COMM_WORLD, "************************************** \n");
 
-    } while ((j < jmax) && ( PetscRealPart(alpha * alpha * deltad) > PetscRealPart(tol2) ));
+    } while ((j < jmax) && (PetscRealPart(alpha * alpha * deltad) > PetscRealPart(tol2)));
     jsum = jsum + j;
     /*
      * update electron density, energy and forces
@@ -418,8 +412,8 @@ void Display_Atompos(SDDFT_OBJ *pSddft) {
   VecGetArray(pSddft->Atompos, &pAtompos);
   PetscPrintf(PETSC_COMM_WORLD, "Atomic positions (Bohr) \n");
   for (poscnt = 0; poscnt < pSddft->nAtoms; poscnt++) {
-    PetscPrintf(PETSC_COMM_WORLD, "%9.9f \t %9.9f \t %9.9f \n", pAtompos[Index],
-                pAtompos[Index + 1], pAtompos[Index + 2]);
+    PetscPrintf(PETSC_COMM_WORLD, "%9.9f \t %9.9f \t %9.9f \n", pAtompos[Index], pAtompos[Index + 1],
+                pAtompos[Index + 2]);
     Index = Index + 3;
   }
   PetscPrintf(PETSC_COMM_WORLD, "\n");
@@ -439,8 +433,8 @@ void Display_Relax(SDDFT_OBJ *pSddft) {
   VecGetArray(pSddft->mvAtmConstraint, &pmvAtmConstraint);
   PetscPrintf(PETSC_COMM_WORLD, "Atomic relaxation flag \n");
   for (poscnt = 0; poscnt < pSddft->nAtoms; poscnt++) {
-    PetscPrintf(PETSC_COMM_WORLD, "%f\t %f\t %f\n", pmvAtmConstraint[Index],
-                pmvAtmConstraint[Index + 1], pmvAtmConstraint[Index + 2]);
+    PetscPrintf(PETSC_COMM_WORLD, "%f\t %f\t %f\n", pmvAtmConstraint[Index], pmvAtmConstraint[Index + 1],
+                pmvAtmConstraint[Index + 2]);
     Index = Index + 3;
   }
   PetscPrintf(PETSC_COMM_WORLD, "\n");
@@ -730,23 +724,23 @@ void Periodic_MapAtoms(SDDFT_OBJ *pSddft) {
       end = (int)floor(pSddft->endPos[at] / 3);
 
       for (poscnt = start; poscnt <= end; poscnt++) {
-        if ( PetscRealPart(pAtompos[index]) < PetscRealPart(-Rx) )
+        if (PetscRealPart(pAtompos[index]) < PetscRealPart(-Rx))
           pAtompos[index] = pAtompos[index] + 2.0 * Rx;
-        else if ( PetscRealPart(pAtompos[index]) > PetscRealPart(Rx) )
+        else if (PetscRealPart(pAtompos[index]) > PetscRealPart(Rx))
           pAtompos[index] = pAtompos[index] - 2.0 * Rx;
 
         index++;
 
-        if ( PetscRealPart(pAtompos[index]) < PetscRealPart(-Ry))
+        if (PetscRealPart(pAtompos[index]) < PetscRealPart(-Ry))
           pAtompos[index] = pAtompos[index] + 2.0 * Ry;
-        else if ( PetscRealPart(pAtompos[index]) > PetscRealPart(Ry) )
+        else if (PetscRealPart(pAtompos[index]) > PetscRealPart(Ry))
           pAtompos[index] = pAtompos[index] - 2.0 * Ry;
 
         index++;
 
-        if ( PetscRealPart(pAtompos[index]) < PetscRealPart(-Rz) )
+        if (PetscRealPart(pAtompos[index]) < PetscRealPart(-Rz))
           pAtompos[index] = pAtompos[index] + 2.0 * Rz;
-        else if ( PetscRealPart(pAtompos[index]) > PetscRealPart(Rz) )
+        else if (PetscRealPart(pAtompos[index]) > PetscRealPart(Rz))
           pAtompos[index] = pAtompos[index] - 2.0 * Rz;
 
         index++;

@@ -1,24 +1,5 @@
-/*=============================================================================================
-  | Simulation Package for Ab-initio Real-space Calculations (SPARC)
-  | Copyright (C) 2016 Material Physics & Mechanics Group at Georgia Tech.
-  |
-  | S. Ghosh, P. Suryanarayana, SPARC: Accurate and efficient finite-difference
-  formulation and | parallel implementation of Density Functional Theory. Part
-  I: Isolated clusters, Computer | Physics Communications | S. Ghosh, P.
-  Suryanarayana, SPARC: Accurate and efficient finite-difference formulation and
-  | parallel implementation of Density Functional Theory. Part II: Periodic
-  systems, Computer | Physics Communications
-  |
-  | file name: main.cc
-  |
-  | Description: This file contains the "main" function.
-  |
-  | Authors: Swarnava Ghosh, Phanish Suryanarayana
-  |
-  | Last Modified: 2/12/2016
-  |-------------------------------------------------------------------------------------------*/
-static char help[] =
-    "Simulation Package for Ab-initio Real-space Calculations (SPARC) \n\
+
+static char help[] = "Simulation Package for Ab-initio Real-space Calculations (SPARC) \n\
 options:\n\
 -name name of file\n";
 
@@ -30,9 +11,8 @@ options:\n\
 #undef __FUNCT__
 #define __FUNCT__ "main"
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-//                              main: the main function //
-///////////////////////////////////////////////////////////////////////////////////////////////
+
+// main: the main function
 int main(int argc, char **argv) {
   int ierr;
   SDDFT_OBJ sddft;
@@ -59,6 +39,7 @@ int main(int argc, char **argv) {
     Objects_Destroy(&sddft); // destroy variables to free memory
   } else if (sddft.BC == 2) {
     if (sddft.Nkpts == 1) {
+      PetscPrintf(PETSC_COMM_WORLD, "Pass here 42 in main\n");
       SDDFT_Periodic(&sddft);
       Objects_Destroy(&sddft); // destroy variables to free memory
     } else {

@@ -5,8 +5,7 @@
             "includePath": [
                 "/usr/lib/x86_64-linux-gnu/openmpi/include/",
                 "/usr/lib/x86_64-linux-gnu/openmpi/include/openmpi",
-                "/home/efefer/mysoftwares/petsc-3.20.3/include",
-                "/home/efefer/mysoftwares/slepc-3.20.1/include",
+                "${workspaceFolder}/../install/petsc-3.12.5_complex/include",
                 "${workspaceFolder}/**"
             ],
             "defines": [],

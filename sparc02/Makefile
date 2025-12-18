@@ -1,25 +1,38 @@
-all:sparc
+REPO_DIR = /home/efefer/WORKS/my_github_repos/ffr-petsc-stuffs
+PETSC_HOME = $(REPO_DIR)/install/petsc-3.12.5_complex
 
-PETSC_DIR1 = /home/efefer/parallel_c/petsc-3.5.4
-PETSC_DIR2 = /home/efefer/parallel_c/petsc-3.5.4/arch-linux2-c-debug
-#PETSC_DIR2 = /home/efefer/WORKS/PETSC/petsc-3.5.3/arch-linux2-c-opt
+CC = mpicc
 
-#MKLROOT = /home/efefer/mysoftwares/LIBMKL/
+INC_FLAGS = -I$(PETSC_HOME)/include 
+CFLAGS = -Wall -O3
 
-FFLAGS =
-#CPPFLAGS = -I${PETSC_DIR}/include -I ./inc -I ${MKLROOT}/include -L ${MKLROOT}/lib/ -llapack-addons -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread 
+LDLIBS  = -Wl,-rpath,$(PETSC_HOME)/lib \
+-L$(PETSC_HOME)/lib \
+-lpetsc \
+-llapacke -llapack -lblas -lm
 
-CPPFLAGS = -std=c++11 -I ${PETSC_DIR1}/include -I ${PETSC_DIR2}/include -I ./inc -I ${MKLROOT}/include
+MY_OBJS = 
 
-SOURCEH = ./inc/sddft.h ./inc/isddft.h
+OBJLIBS = \
+ExchangeCorrelation.o density.o forces.o kPointHamiltonian.o  mixing.o nonlocal.o poisson.o \
+relaxatoms.o  spline.o chebyshev.o energy.o initObjs.o  multipole.o  occupation.o  readfiles.o  scf.o \
+$(MY_OBJS)
 
-OBJSC = ./src/main.o ./src/initObjs.o ./src/spline.o ./src/nonlocal.o ./src/density.o ./src/readfiles.o ./src/energy.o ./src/ExchangeCorrelation.o ./src/occupation.o ./src/poisson.o ./src/chebyshev.o ./src/scf.o ./src/mixing.o ./src/forces.o ./src/relaxatoms.o ./src/multipole.o ./src/kPointHamiltonian.o
+all: lib
 
-PETSC_LIB = -Wl,-rpath,${PETSC_DIR2}/lib: ${PETSC_DIR2}/lib/libpetsc.so -L${MKLROOT} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread
+# Note the implicit rule to compile '.cc' files into '.o' files is
+%.o : %.c
+	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
 
-CLEANFILES = ./lib/sparc ${OBJSC}
+lib: $(OBJLIBS)
+	ar rcs libsparc.a $(OBJLIBS)
 
+main_debug: lib
+	$(CC) $(CFLAGS) $(INC_FLAGS) $(LDFLAGS) main_debug.c libsparc.a $(LDLIBS) -o main_debug.x
 
-sparc: ${OBJSC}
-	${CXX} -Wall -o lib/sparc ${OBJSC} ${PETSC_LIB}
-	${RM} ${OBJSC}
+main: lib
+	$(CC) $(CFLAGS) $(INC_FLAGS) $(LDFLAGS) main.c libsparc.a $(LDLIBS) -o main.x
+
+.PHONY: clean
+clean:
+	rm -fv *.x *.o libsparc.a
