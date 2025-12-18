@@ -22,6 +22,11 @@ make PETSC_DIR=/home/efefer/WORKS/my_github_repos/ffr-petsc-stuffs/install/petsc
 *** Install of PETSc (and any other packages) complete ***
 ```
 
+Complex version
+```
+./configure --prefix=/home/efefer/WORKS/my_github_repos/ffr-petsc-stuffs/install/petsc-3.24.2_complex --with-fc=0 --with-scalar-type=complex
+```
+
 # SLEPc 3.24.1
 
 ```
@@ -36,20 +41,16 @@ export PETSC_ARCH=""
 
 # PETSc 3.12.5
 
-./configure --prefix=/home/efefer/mysoftwares/petsc-3.12.5
-
-make PETSC_DIR=/home/efefer/parallel_c/petsc-3.12.5 PETSC_ARCH=arch-linux-c-debug all
-
-make PETSC_DIR=/home/efefer/parallel_c/petsc-3.12.5 PETSC_ARCH=arch-linux-c-debug install
-
-
-Using optimized setting
+WARNING: The build system is written in Python which contains several deprecated and removed functions.
+Need to manually edit:
 ```
-./configure --prefix=/home/efefer/mysoftwares/petsc-3.12.5_opt --with-fc=0 --with-debugging=0
-
-make PETSC_DIR=/home/efefer/mysoftwares/petsc-3.12.5_opt PETSC_ARCH="" test
+isAlive() -> is_alive()
 ```
 
+scalar=complex?
+```
+./configure --with-cc=gcc --with-cxx=g++ --prefix=/home/efefer/WORKS/my_github_repos/ffr-petsc-stuffs/install/petsc-3.12.5_opt --with-fc=0 --with-debugging=0
+```
 
 ```
 Install complete.
@@ -57,11 +58,12 @@ Now to check if the libraries are working do (in current directory):
 make PETSC_DIR=/home/efefer/mysoftwares/petsc-3.12.5 PETSC_ARCH="" test
 ```
 
-
+Need mpich?
+```
 ./configure --prefix=/home/efefer/mysoftwares/petsc-3.12.5_mpich --download-mpich
 
 make PETSC_DIR=/home/efefer/mysoftwares/petsc-3.12.5_mpich PETSC_ARCH="" test
-
+```
 
 
 
@@ -70,6 +72,12 @@ make PETSC_DIR=/home/efefer/mysoftwares/petsc-3.12.5_mpich PETSC_ARCH="" test
 ```
 python2 './configure' '--with-fc=0' '--download-mpich' '--with-scalar-type=complex'
 ```
+
+```
+./configure --with-cc=gcc-9 --with-cxx=g++-9 --with-fc=0 --download-mpich --with-scalar-type=complex
+```
+
+Probably also try `./configure --with-mpi=0`
 
 ```
 make PETSC_DIR=/home/efefer/parallel_c/petsc-3.5.4 PETSC_ARCH=arch-linux2-c-debug test
