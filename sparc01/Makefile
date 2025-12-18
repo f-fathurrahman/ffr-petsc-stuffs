@@ -1,4 +1,4 @@
-REPO_DIR = /mnt/d/WORKS/my_github_repos/ffr-petsc-stuffs
+REPO_DIR = /home/efefer/WORKS/my_github_repos/ffr-petsc-stuffs
 PETSC_HOME = $(REPO_DIR)/install/petsc-3.12.5_opt
 
 CPPFLAGS = -I$(PETSC_HOME)/include 
