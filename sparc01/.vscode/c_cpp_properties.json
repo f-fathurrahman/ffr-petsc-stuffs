@@ -14,7 +14,7 @@
             "name": "PETSc",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/home/efefer/mysoftwares/petsc-3.12.5/include/**",
+                "${workspaceFolder}/../install/petsc-3.12.5_opt/include/**",
                 "/usr/lib/x86_64-linux-gnu/openmpi/include"
             ],
             "defines": [],

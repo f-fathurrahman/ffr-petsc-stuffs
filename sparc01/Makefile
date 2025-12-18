@@ -1,7 +1,10 @@
-CPPFLAGS = -I/home/efefer/mysoftwares/petsc-3.12.5_opt/include
+REPO_DIR = /mnt/d/WORKS/my_github_repos/ffr-petsc-stuffs
+PETSC_HOME = $(REPO_DIR)/install/petsc-3.12.5_opt
 
-LDLIBS  = -Wl,-rpath,/home/efefer/mysoftwares/petsc-3.12.5_opt/lib \
--L/home/efefer/mysoftwares/petsc-3.12.5_opt/lib \
+CPPFLAGS = -I$(PETSC_HOME)/include 
+
+LDLIBS  = -Wl,-rpath,$(PETSC_HOME)/lib \
+-L$(PETSC_HOME)/lib \
 -Wl,-rpath,/usr/lib/x86_64-linux-gnu/openmpi/lib \
 -L/usr/lib/x86_64-linux-gnu/openmpi/lib -Wl,-rpath,/usr/lib/gcc/x86_64-linux-gnu/9 \
 -L/usr/lib/gcc/x86_64-linux-gnu/9 -Wl,-rpath,/usr/lib/x86_64-linux-gnu \
@@ -31,7 +34,7 @@ $(MY_OBJS)
 
 OBJSC = main.o $(OBJLIBS)
 
-EXECUTABLE = sparc01.x
+EXECUTABLE = main.x
 TESTBASE = ../.ci
 
 override CC=mpicc
@@ -46,14 +49,14 @@ lib: $(OBJLIBS)
 	ar rcs libsparc.a $(OBJLIBS)
 
 main_debug: lib
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o main_debug.x main_debug.c libsparc.a $(LDLIBS)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) main_debug.cc libsparc.a $(LDLIBS) -o main_debug.x
 
-sparc: $(OBJSC)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $(EXECUTABLE) $^ $(LDLIBS)
+main: $(OBJSC)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) main.cc libsparc.a $(LDLIBS) -o main.x
 
 .PHONY: clean
 clean:
-	rm -f  $(OBJSC) $(EXECUTABLE)
+	rm -f  $(OBJSC) $(EXECUTABLE) *.x
 
 test: ../tests/SPARC_testing_script.py
 	cd ../tests; python SPARC_testing_script.py

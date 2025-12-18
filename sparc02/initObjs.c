@@ -35,6 +35,7 @@
 void SddftObjInitialize(SDDFT_OBJ* pSddft)
 {
   PetscOptionsGetString(PETSC_NULL,"-name",pSddft->file,sizeof(pSddft->file),PETSC_NULL);
+  //PetscOptionsGetString(PETSC_NULL, PETSC_NULL, "-name", pSddft->file,sizeof(pSddft->file),PETSC_NULL);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //                         Objects_Create: Creates the PETSc objects                         //

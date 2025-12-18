@@ -1,14 +1,9 @@
-static char help[] = "
-Simulation Package for Ab-initio Real-space Calculations (SPARC) \n\
-options:\n\"
--name name of file\n";
+#include "isddft.h"
+#include "sddft.h"
 
 #include "my_functions.h"
-#include "isddft.h"
 
-#include <petsctime.h>
-#include <mpi.h>
-
+static char help[] = "Simulation Package for Ab-initio Real-space Calculations (SPARC) \n options:\n\" -name name of file\n";
 
 int main( int argc, char **argv )
 {

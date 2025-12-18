@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/usr/lib/x86_64-linux-gnu/openmpi/include/",
+                "/usr/lib/x86_64-linux-gnu/openmpi/include/openmpi",
+                "/home/efefer/mysoftwares/petsc-3.20.3/include",
+                "/home/efefer/mysoftwares/slepc-3.20.1/include",
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}

@@ -29,12 +29,12 @@ basnam=`basename $1 .cc`
 #-lmpifort -lmpi -lgfortran -lm -lgfortran -lm -lgcc_s -lquadmath -lstdc++ -ldl -o $basnam.x
 
 
-/home/efefer/mysoftwares/petsc-3.12.5_mpich/bin/mpicc -Wall \
--I/home/efefer/mysoftwares/petsc-3.12.5_mpich/include $1 \
--Wl,-rpath,/home/efefer/mysoftwares/petsc-3.12.5_mpich/lib -L/home/efefer/mysoftwares/petsc-3.12.5_mpich/lib \
--Wl,-rpath,/home/efefer/mysoftwares/petsc-3.12.5_mpich/lib -L/home/efefer/mysoftwares/petsc-3.12.5_mpich/lib \
--Wl,-rpath,/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9 \
--Wl,-rpath,/usr/lib/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu \
--Wl,-rpath,/lib/x86_64-linux-gnu -L/lib/x86_64-linux-gnu \
--lpetsc -llapack -lblas -lpthread -lm -lX11 -lstdc++ -ldl \
--lmpifort -lmpi -lgfortran -lm -lgfortran -lm -lgcc_s -lquadmath -lstdc++ -ldl -o $basnam.x
+#/home/efefer/mysoftwares/petsc-3.12.5_mpich/bin/mpicc -Wall \
+#-I/home/efefer/mysoftwares/petsc-3.12.5_mpich/include $1 \
+#-Wl,-rpath,/home/efefer/mysoftwares/petsc-3.12.5_mpich/lib -L/home/efefer/mysoftwares/petsc-3.12.5_mpich/lib \
+#-Wl,-rpath,/home/efefer/mysoftwares/petsc-3.12.5_mpich/lib -L/home/efefer/mysoftwares/petsc-3.12.5_mpich/lib \
+#-Wl,-rpath,/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9 \
+#-Wl,-rpath,/usr/lib/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu \
+#-Wl,-rpath,/lib/x86_64-linux-gnu -L/lib/x86_64-linux-gnu \
+#-lpetsc -llapack -lblas -lpthread -lm -lX11 -lstdc++ -ldl \
+#-lmpifort -lmpi -lgfortran -lm -lgfortran -lm -lgcc_s -lquadmath -lstdc++ -ldl -o $basnam.x

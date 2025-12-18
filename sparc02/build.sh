@@ -1,3 +1,5 @@
+set -x 
+
 basnam=`basename $1 .c`
 
 # Can be obtained by `make`-ing some tutorials:
