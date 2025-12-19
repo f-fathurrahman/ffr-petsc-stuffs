@@ -14,8 +14,8 @@
   |
   | Last Modified: 2/9/2016
   |-------------------------------------------------------------------------------------------*/
-#include "sddft.h"
 #include "petscsys.h"
+#include "sddft.h"
 #include <petsctime.h>
 
 //#include "mkl_lapacke.h"
@@ -31,12 +31,15 @@ using namespace std;
 //                       SddftObjInitialize: reads the input filename                        //
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void SddftObjInitialize(SDDFT_OBJ *pSddft) {
-  PetscPrintf(PETSC_COMM_WORLD, "ENTER SddftObjInitialize\n");
+  
+  PetscPrintf(PETSC_COMM_WORLD, "\n<div> ENTER SddftObjInitialize\n");
+  
   PetscBool set;
-  PetscOptionsGetString(PETSC_NULL, PETSC_NULL, "-name", pSddft->file, sizeof(pSddft->file),
-                        &set);
+  PetscOptionsGetString(PETSC_NULL, PETSC_NULL, "-name", pSddft->file, sizeof(pSddft->file), &set);
   PetscPrintf(PETSC_COMM_WORLD, "pSddft->file = %s\n", pSddft->file);
-  PetscPrintf(PETSC_COMM_WORLD, "EXIT SddftObjInitialize\n");
+  
+  PetscPrintf(PETSC_COMM_WORLD, "\n</div> EXIT SddftObjInitialize\n");
+  
   return;
 }
 
@@ -45,9 +48,7 @@ void SddftObjInitialize(SDDFT_OBJ *pSddft) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 PetscErrorCode Objects_Create(SDDFT_OBJ *pSddft) {
 
-  PetscPrintf(PETSC_COMM_WORLD, "--------------------\n");
-  PetscPrintf(PETSC_COMM_WORLD, "ENTER Objects_Create\n");
-  PetscPrintf(PETSC_COMM_WORLD, "--------------------\n");
+  PetscPrintf(PETSC_COMM_WORLD, "\n<div> ENTER Objects_Create\n");
 
   PetscInt n_x = pSddft->numPoints_x;
   PetscInt n_y = pSddft->numPoints_y;
@@ -64,22 +65,21 @@ PetscErrorCode Objects_Create(SDDFT_OBJ *pSddft) {
   PetscPrintf(PETSC_COMM_WORLD, "num_points = %d, %d, %d\n", n_x, n_y, n_z);
   PetscPrintf(PETSC_COMM_WORLD, "order = %d\n", o);
 
-
   ierr =
-  DMDACreate3d(PETSC_COMM_WORLD, DM_BOUNDARY_GHOSTED, DM_BOUNDARY_GHOSTED, DM_BOUNDARY_GHOSTED,
-               DMDA_STENCIL_STAR, n_x, n_y, n_z, PETSC_DECIDE, PETSC_DECIDE, PETSC_DECIDE, 1, o, 0,
-               0, 0, &pSddft->da);
+      DMDACreate3d(PETSC_COMM_WORLD, DM_BOUNDARY_GHOSTED, DM_BOUNDARY_GHOSTED, DM_BOUNDARY_GHOSTED, DMDA_STENCIL_STAR,
+                   n_x, n_y, n_z, PETSC_DECIDE, PETSC_DECIDE, PETSC_DECIDE, 1, o, 0, 0, 0, &pSddft->da);
   CHKERRQ(ierr);
 
-  ierr = DMSetUp(pSddft->da); CHKERRQ(ierr);
-
-  ierr =
-  DMDACreate3d(PETSC_COMM_WORLD, DM_BOUNDARY_GHOSTED, DM_BOUNDARY_GHOSTED, DM_BOUNDARY_GHOSTED,
-               DMDA_STENCIL_STAR, n_x, n_y, n_z, PETSC_DECIDE, PETSC_DECIDE, PETSC_DECIDE, 1, o, 0,
-               0, 0, &pSddft->da_grad);
+  ierr = DMSetUp(pSddft->da);
   CHKERRQ(ierr);
 
-  ierr = DMSetUp(pSddft->da_grad); CHKERRQ(ierr);
+  ierr =
+      DMDACreate3d(PETSC_COMM_WORLD, DM_BOUNDARY_GHOSTED, DM_BOUNDARY_GHOSTED, DM_BOUNDARY_GHOSTED, DMDA_STENCIL_STAR,
+                   n_x, n_y, n_z, PETSC_DECIDE, PETSC_DECIDE, PETSC_DECIDE, 1, o, 0, 0, 0, &pSddft->da_grad);
+  CHKERRQ(ierr);
+
+  ierr = DMSetUp(pSddft->da_grad);
+  CHKERRQ(ierr);
 
   ierr = DMCreateGlobalVector(pSddft->da, &pSddft->elecDensRho); // error
   CHKERRQ(ierr);
@@ -102,7 +102,6 @@ PetscErrorCode Objects_Create(SDDFT_OBJ *pSddft) {
   VecDuplicate(pSddft->elecDensRho, &pSddft->xkprev);
   VecDuplicate(pSddft->elecDensRho, &pSddft->xk);
   VecDuplicate(pSddft->elecDensRho, &pSddft->fkprev);
-
 
   PetscMalloc(sizeof(Vec) * (MAX_ITS_ANDERSON), &pSddft->Xk);
   PetscMalloc(sizeof(Vec) * (MAX_ITS_ANDERSON), &pSddft->Fk);
@@ -132,7 +131,7 @@ PetscErrorCode Objects_Create(SDDFT_OBJ *pSddft) {
   KSPSetFromOptions(pSddft->ksp);
 
   // creating gradient operators
-  
+
   if (comm_size == 1) {
     DMCreateMatrix(pSddft->da_grad, &pSddft->gradient_x);
     DMCreateMatrix(pSddft->da_grad, &pSddft->gradient_y);
@@ -149,14 +148,10 @@ PetscErrorCode Objects_Create(SDDFT_OBJ *pSddft) {
   PetscMalloc(sizeof(PetscInt) * (lzdim * lydim * lxdim), &pSddft->nnzDArray);
   PetscMalloc(sizeof(PetscInt) * (lzdim * lydim * lxdim), &pSddft->nnzODArray);
 
-
-  PetscPrintf(PETSC_COMM_WORLD, "-------------------\n");
-  PetscPrintf(PETSC_COMM_WORLD, "EXIT Objects_Create\n");
-  PetscPrintf(PETSC_COMM_WORLD, "-------------------\n");
+  PetscPrintf(PETSC_COMM_WORLD, "\n</div> EXIT Objects_Create\n");
 
   return 0;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //                         Laplace_matInit: Initializes the -(1/2)*Laplacian operator        //
@@ -435,8 +430,8 @@ void ChargDensB_cutoff(SDDFT_OBJ *pSddft) {
           pBJArray[k - o][j - o][i - o] = pVpsArray[k][j][i] * coeffs[0];
           for (a = 1; a <= o; a++) {
             pBJArray[k - o][j - o][i - o] +=
-                (pVpsArray[k][j][i - a] + pVpsArray[k][j][i + a] + pVpsArray[k][j - a][i] +
-                 pVpsArray[k][j + a][i] + pVpsArray[k - a][j][i] + pVpsArray[k + a][j][i]) *
+                (pVpsArray[k][j][i - a] + pVpsArray[k][j][i + a] + pVpsArray[k][j - a][i] + pVpsArray[k][j + a][i] +
+                 pVpsArray[k - a][j][i] + pVpsArray[k + a][j][i]) *
                 coeffs[a];
           }
         }

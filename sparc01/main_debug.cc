@@ -3,10 +3,10 @@
 
 #include "my_functions.h"
 
-static char help[] = "Simulation Package for Ab-initio Real-space Calculations (SPARC) \n options:\n\" -name name of file\n";
+static char help[] =
+    "Simulation Package for Ab-initio Real-space Calculations (SPARC) \n options:\n\" -name name of file\n";
 
-int main( int argc, char **argv )
-{
+int main(int argc, char **argv) {
   PetscErrorCode ierr;
   SDDFT_OBJ sddft;
 
@@ -25,7 +25,7 @@ int main( int argc, char **argv )
   /*
    * DFT calculation
    */
-  //SDDFT_Nonperiodic(&sddft);
+  // SDDFT_Nonperiodic(&sddft);
   /*
    * destroy variables to free memory
    */
