@@ -1,0 +1,23 @@
+#PBS -N Si_PERIODIC
+#PBS -q mps
+#PBS -o output3.sparc
+#PBS -j oe
+#PBS -l nodes=1:ppn=16
+#PBS -l mem=30gb
+#PBS -l walltime=500:00:00
+MYPROCS=16
+
+module purge
+module load intel/15.0
+module load mvapich2/2.1
+module load fftw/3.3.4
+module load mkl/11.2
+module load petsc/3.5.3/opt
+
+ulimit -s unlimited
+
+cd ${PBS_O_WORKDIR}
+echo $PWD
+echo "======================================================================="
+mpirun -np $MYPROCS ../../lib/sparc -name Si -log_summary > Si.out
+echo "======================================================================="
