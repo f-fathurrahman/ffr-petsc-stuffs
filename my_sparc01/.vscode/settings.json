@@ -1,0 +1,9 @@
+{
+  "files.exclude": {
+    "**/*.mod": true,
+    "**/*.o": true,
+    "**/*.x": true,
+    "**/*.out": true,
+    "**/*.a": true,
+  },
+}
