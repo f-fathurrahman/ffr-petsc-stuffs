@@ -95,7 +95,7 @@ void Solve_ElectronicStructureProblem(SDDFT_OBJ* pSddft);
 
 
 PetscErrorCode SDDFT_Periodic(SDDFT_OBJ* pSddft);
-PetscErrorCode PeriodicLaplacianNonlocalPseudopotential_MatInit(SDDFT_OBJ* pSddft);
+PetscErrorCode per_Laplacian_nlpsp_mat_init(SDDFT_OBJ* pSddft);
 void PeriodicEstimateNonZerosNonlocalPseudopot(SDDFT_OBJ* pSddft);
 void PeriodicChargDensB_VecInit(SDDFT_OBJ* pSddft);
 void PeriodicChargDensB_TM_VecInit(SDDFT_OBJ* pSddft);

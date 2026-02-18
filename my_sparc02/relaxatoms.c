@@ -92,7 +92,7 @@ PetscErrorCode GammaPoint_FormFunction_relaxAtoms(SDDFT_OBJ *pSddft) {
     PetscPrintf(PETSC_COMM_WORLD, "Estimating Nonzeros in Hamiltonian : \n");
     PeriodicEstimateNonZerosNonlocalPseudopot(pSddft);
     PetscPrintf(PETSC_COMM_WORLD, "making Nonlocal Pseudopotential matrix \n");
-    PeriodicLaplacianNonlocalPseudopotential_MatInit(pSddft);
+    per_Laplacian_nlpsp_mat_init(pSddft);
     Wavefunctions_MatMatMultSymbolic(pSddft);
   }
 
@@ -547,7 +547,7 @@ PetscErrorCode SDDFT_Periodic(SDDFT_OBJ *pSddft) {
   PeriodicEstimateNonZerosNonlocalPseudopot(pSddft);
   PetscPrintf(PETSC_COMM_WORLD, "Pass here 548\n");
 
-  PeriodicLaplacianNonlocalPseudopotential_MatInit(pSddft);
+  per_Laplacian_nlpsp_mat_init(pSddft);
   PetscPrintf(PETSC_COMM_WORLD, "Pass here 551\n");
 
   Wavefunctions_MatInit(pSddft);
