@@ -10,12 +10,10 @@
 // -(1/2)laplacian+Vnonloc operator//
 //                  for periodic boundary conditions (without k point sampling)
 //                  //
-PetscErrorCode
-per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
+PetscErrorCode per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
   PetscScalar *pAtompos;
   PetscInt xcor, ycor, zcor, gxdim, gydim, gzdim, lxdim, lydim, lzdim;
-  PetscInt xs, ys, zs, xl, yl, zl, xstart = -1, ystart = -1, zstart = -1,
-                                   xend = -1, yend = -1, zend = -1, overlap = 0,
+  PetscInt xs, ys, zs, xl, yl, zl, xstart = -1, ystart = -1, zstart = -1, xend = -1, yend = -1, zend = -1, overlap = 0,
                                    colidx;
   PetscScalar x0, y0, z0, X0, Y0, Z0, cutoffr, max1, max2, max;
   int start, end, lmax, lloc;
@@ -32,11 +30,9 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
   PetscScalar Rcut;
   PetscScalar dr = 1e-3;
   int OrbitalSize;
-  PetscInt i = 0, j, k, xi, yj, zk, offset, Ii, J, K, II, JJ, KK, nzVps, nyVps,
-           nxVps, nzVpsloc, nyVpsloc, nxVpsloc, i0, j0, k0, poscnt, index = 0,
-           at, ii, jj, kk, l, m;
-  PetscScalar delta = pSddft->delta, x, y, z, r, xx, yy, zz, rmax, rtemp, XX,
-              YY, ZZ;
+  PetscInt i = 0, j, k, xi, yj, zk, offset, Ii, J, K, II, JJ, KK, nzVps, nyVps, nxVps, nzVpsloc, nyVpsloc, nxVpsloc, i0,
+           j0, k0, poscnt, index = 0, at, ii, jj, kk, l, m;
+  PetscScalar delta = pSddft->delta, x, y, z, r, xx, yy, zz, rmax, rtemp, XX, YY, ZZ;
   PetscInt n_x = pSddft->numPoints_x;
   PetscInt n_y = pSddft->numPoints_y;
   PetscInt n_z = pSddft->numPoints_z;
@@ -60,23 +56,22 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
   ISLocalToGlobalMapping ltog;
 
   AO aodmda;
-  PetscCall( DMDAGetAO(pSddft->da, &aodmda) );
+  PetscCall(DMDAGetAO(pSddft->da, &aodmda));
   PetscInt LIrow, *LIcol;
 
-  PetscCall( DMDAGetCorners(pSddft->da, 0, 0, 0, &xm, &ym, &zm) );
+  PetscCall(DMDAGetCorners(pSddft->da, 0, 0, 0, &xm, &ym, &zm));
 
-  PetscCall( DMGetLocalToGlobalMapping(pSddft->da, &ltog) );
+  PetscCall(DMGetLocalToGlobalMapping(pSddft->da, &ltog));
 
   /*
    * create the distributed matrix with the same numbering as the laplacian
    * operator
    */
-  PetscCall( MatCreate(PetscObjectComm((PetscObject)pSddft->da), &pSddft->HamiltonianOpr) );
+  PetscCall(MatCreate(PetscObjectComm((PetscObject)pSddft->da), &pSddft->HamiltonianOpr));
 
   PetscPrintf(PETSC_COMM_WORLD, "Pass here 572 in nonlocal.c\n");
 
-  MatSetSizes(pSddft->HamiltonianOpr, xm * ym * zm, xm * ym * zm,
-              n_x * n_y * n_z, n_x * n_y * n_z);
+  MatSetSizes(pSddft->HamiltonianOpr, xm * ym * zm, xm * ym * zm, n_x * n_y * n_z, n_x * n_y * n_z);
 
   if (comm_size == 1)
     MatSetType(pSddft->HamiltonianOpr, MATSEQAIJ);
@@ -86,8 +81,7 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
   MatSetFromOptions(pSddft->HamiltonianOpr);
   MatSetLocalToGlobalMapping(pSddft->HamiltonianOpr, ltog, ltog);
 
-  DMDAGetGhostCorners(pSddft->da, &starts[0], &starts[1], &starts[2], &dims[0],
-                      &dims[1], &dims[2]);
+  DMDAGetGhostCorners(pSddft->da, &starts[0], &starts[1], &starts[2], &dims[0], &dims[1], &dims[2]);
   MatSetStencil(pSddft->HamiltonianOpr, 3, dims, starts, 1);
   MatSetUp(pSddft->HamiltonianOpr);
   DMDAGetInfo(pSddft->da, 0, &gxdim, &gydim, &gzdim, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -99,12 +93,10 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
   if (comm_size == 1) {
     MatSeqAIJSetPreallocation(pSddft->HamiltonianOpr, 0, pSddft->nnzDArray);
   } else {
-    MatMPIAIJSetPreallocation(pSddft->HamiltonianOpr, 0, pSddft->nnzDArray, 0,
-                              pSddft->nnzODArray);
+    MatMPIAIJSetPreallocation(pSddft->HamiltonianOpr, 0, pSddft->nnzDArray, 0, pSddft->nnzODArray);
   }
 
-  MatSetOption(pSddft->HamiltonianOpr, MAT_NEW_NONZERO_ALLOCATION_ERR,
-               PETSC_FALSE);
+  MatSetOption(pSddft->HamiltonianOpr, MAT_NEW_NONZERO_ALLOCATION_ERR, PETSC_FALSE);
 
 #ifdef _DEBUG
   printf("Gxdim:%d,Gydim:%d,Gzdim:%d\n", gxdim, gydim, gzdim);
@@ -164,8 +156,7 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
           Lapcol[colidx].k = k;
           Lapval[colidx++] = pSddft->coeffs[l];
         }
-        MatSetValuesStencil(pSddft->HamiltonianOpr, 1, &Laprow, 6 * o + 1,
-                            Lapcol, Lapval, ADD_VALUES);
+        MatSetValuesStencil(pSddft->HamiltonianOpr, 1, &Laprow, 6 * o + 1, Lapcol, Lapval, ADD_VALUES);
       }
     }
   }
@@ -188,7 +179,7 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
   for (at = 0; at < pSddft->Ntype; at++) {
 
     PetscPrintf(PETSC_COMM_WORLD, "at = %d\n", at);
-    
+
     lmax = pSddft->psd[at].lmax;
     lloc = pSddft->localPsd[at];
 
@@ -202,10 +193,10 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
       index = index + 3 * (end - start + 1);
     }
     if (lmax != 0) {
-      max1 = PetscRealPart(pSddft->psd[at].rc_s) > PetscRealPart(pSddft->psd[at].rc_p) ?
-             pSddft->psd[at].rc_s : pSddft->psd[at].rc_p;
-      max2 = PetscRealPart(pSddft->psd[at].rc_d) > PetscRealPart(pSddft->psd[at].rc_f) ?
-             pSddft->psd[at].rc_d : pSddft->psd[at].rc_f;
+      max1 = PetscRealPart(pSddft->psd[at].rc_s) > PetscRealPart(pSddft->psd[at].rc_p) ? pSddft->psd[at].rc_s
+                                                                                       : pSddft->psd[at].rc_p;
+      max2 = PetscRealPart(pSddft->psd[at].rc_d) > PetscRealPart(pSddft->psd[at].rc_f) ? pSddft->psd[at].rc_d
+                                                                                       : pSddft->psd[at].rc_f;
       cutoffr = PetscRealPart(max1) > PetscRealPart(max2) ? max1 : max2;
       offset = ceil(cutoffr / delta);
       tableR[0] = 0.0;
@@ -219,9 +210,7 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
          * we assume the values at r=0 to be 0.
          */
         if (l == 0) {
-          tableUlDeltaV[0][0] =
-              pSddft->psd[at].Us[0] *
-              (pSddft->psd[at].Vs[0] - pSddft->psd[at].Vloc[0]);
+          tableUlDeltaV[0][0] = pSddft->psd[at].Us[0] * (pSddft->psd[at].Vs[0] - pSddft->psd[at].Vloc[0]);
           tableU[0][0] = pSddft->psd[at].Us[0];
         }
         if (l == 1) {
@@ -239,49 +228,43 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
       }
       count = 1;
       do {
-        
-        PetscPrintf(PETSC_COMM_WORLD, "count = %d\n", count);
 
         tableR[count] = pSddft->psd[at].RadialGrid[count - 1];
         for (l = 0; l <= lmax; l++) {
           if (l == 0) {
-            tableUlDeltaV[0][count] = pSddft->psd[at].Us[count - 1] *
-                                      (pSddft->psd[at].Vs[count - 1] -
-                                       pSddft->psd[at].Vloc[count - 1]);
+            tableUlDeltaV[0][count] =
+                pSddft->psd[at].Us[count - 1] * (pSddft->psd[at].Vs[count - 1] - pSddft->psd[at].Vloc[count - 1]);
             tableU[0][count] = pSddft->psd[at].Us[count - 1];
           }
           if (l == 1) {
-            tableUlDeltaV[1][count] = pSddft->psd[at].Up[count - 1] *
-                                      (pSddft->psd[at].Vp[count - 1] -
-                                       pSddft->psd[at].Vloc[count - 1]);
+            tableUlDeltaV[1][count] =
+                pSddft->psd[at].Up[count - 1] * (pSddft->psd[at].Vp[count - 1] - pSddft->psd[at].Vloc[count - 1]);
             tableU[1][count] = pSddft->psd[at].Up[count - 1];
           }
           if (l == 2) {
-            tableUlDeltaV[2][count] = pSddft->psd[at].Ud[count - 1] *
-                                      (pSddft->psd[at].Vd[count - 1] -
-                                       pSddft->psd[at].Vloc[count - 1]);
+            tableUlDeltaV[2][count] =
+                pSddft->psd[at].Ud[count - 1] * (pSddft->psd[at].Vd[count - 1] - pSddft->psd[at].Vloc[count - 1]);
             tableU[2][count] = pSddft->psd[at].Ud[count - 1];
           }
           if (l == 3) {
-            tableUlDeltaV[3][count] = pSddft->psd[at].Uf[count - 1] *
-                                      (pSddft->psd[at].Vf[count - 1] -
-                                       pSddft->psd[at].Vloc[count - 1]);
+            tableUlDeltaV[3][count] =
+                pSddft->psd[at].Uf[count - 1] * (pSddft->psd[at].Vf[count - 1] - pSddft->psd[at].Vloc[count - 1]);
             tableU[3][count] = pSddft->psd[at].Uf[count - 1];
           }
         }
         count++;
-      } while ( PetscRealPart(tableR[count - 1]) <= PetscRealPart(1.732 * pSddft->CUTOFF[at] + 4.0) );
+      } while (PetscRealPart(tableR[count - 1]) <= PetscRealPart(1.732 * pSddft->CUTOFF[at] + 4.0));
       rmax = tableR[count - 1];
 
-      PetscCall( PetscMalloc(sizeof(PetscScalar *) * (lmax + 1), &YDUlDeltaV) );
-      PetscCall( PetscMalloc(sizeof(PetscScalar *) * (lmax + 1), &YDU) );
+      PetscCall(PetscMalloc(sizeof(PetscScalar *) * (lmax + 1), &YDUlDeltaV));
+      PetscCall(PetscMalloc(sizeof(PetscScalar *) * (lmax + 1), &YDU));
       PetscPrintf(PETSC_COMM_WORLD, "Pass here 751\n");
 
       for (l = 0; l <= lmax; l++) {
         PetscPrintf(PETSC_COMM_WORLD, "l = %d lmax = %d\n", l, lmax);
 
-        PetscCall( PetscMalloc(sizeof(PetscScalar) * count, &YDUlDeltaV[l]) );
-        PetscCall( PetscMalloc(sizeof(PetscScalar) * count, &YDU[l]) );
+        PetscCall(PetscMalloc(sizeof(PetscScalar) * count, &YDUlDeltaV[l]));
+        PetscCall(PetscMalloc(sizeof(PetscScalar) * count, &YDU[l]));
         /*
          * derivatives of the spline fit to the pseudopotentials and
          * pseudowavefunctions
@@ -295,14 +278,14 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
       /*
        * Computation of denominator term
        */
-      PetscMalloc(sizeof(PetscScalar *) * (lmax + 1), &Dexact);
+      PetscMalloc(sizeof(PetscScalar) * (lmax + 1), &Dexact);
       if (Dexact == NULL) {
         printf("memory allocation fail");
         exit(1);
       }
-      PetscPrintf(PETSC_COMM_WORLD, "Pass here 776\n");
       //
       for (l = 0; l <= lmax; l++) {
+        PetscPrintf(PETSC_COMM_WORLD, "l = %d lmax = %d\n", l, lmax);
         Dexact[l] = 0;
         rtemp = dr;
         if (l != lloc) {
@@ -315,25 +298,20 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
           if (l == 3)
             Rcut = pSddft->psd[at].rc_f;
 
-          while ( PetscRealPart(rtemp) <= PetscRealPart(Rcut + delta) ) {
-            ispline_gen(tableR, tableUlDeltaV[l], count, &rtemp, &UlDelVl,
-                        &DUlDelVl, 1, YDUlDeltaV[l]);
+          while (PetscRealPart(rtemp) <= PetscRealPart(Rcut + delta)) {
+            ispline_gen(tableR, tableUlDeltaV[l], count, &rtemp, &UlDelVl, &DUlDelVl, 1, YDUlDeltaV[l]);
             ispline_gen(tableR, tableU[l], count, &rtemp, &Ul, &DUl, 1, YDU[l]);
 
             Dexact[l] += UlDelVl * Ul * rtemp * rtemp * dr;
             rtemp = rtemp + dr;
           }
-          Dexact[l] = (Dexact[l] -
-                       0.5 * UlDelVl * Ul * (rtemp - dr) * (rtemp - dr) * dr) /
-                      (delta * delta * delta);
+          Dexact[l] = (Dexact[l] - 0.5 * UlDelVl * Ul * (rtemp - dr) * (rtemp - dr) * dr) / (delta * delta * delta);
         }
       }
 
       PetscPrintf(PETSC_COMM_WORLD, "Pass here 804\n");
 
-      /*
-       * loop over every atom of a given type
-       */
+      // loop over every atom of a given type
       for (poscnt = start; poscnt <= end; poscnt++) {
 
         PetscPrintf(PETSC_COMM_WORLD, "poscnt = %d\n", poscnt);
@@ -423,8 +401,8 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
               else if (zcor + lzdim - 1 >= zs && zcor + lzdim - 1 <= zl)
                 zend = zcor + lzdim - 1;
 
-              if ((xstart != -1000) && (xend != -1000) && (ystart != -1000) &&
-                  (yend != -1000) && (zstart != -1000) && (zend != -1000))
+              if ((xstart != -1000) && (xend != -1000) && (ystart != -1000) && (yend != -1000) && (zstart != -1000) &&
+                  (zend != -1000))
                 overlap = 1;
 
               if (overlap) {
@@ -435,11 +413,11 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
                 nzVpsloc = zend - zstart + 1;
                 nyVpsloc = yend - ystart + 1;
                 nxVpsloc = xend - xstart + 1;
-                
+
                 PetscPrintf(PETSC_COMM_WORLD, "nx,ny,nz Vps = [%d,%d,%d]\n", nxVps, nyVps, nzVps);
-                
-                PetscCall( PetscMalloc(sizeof(PetscScalar) * (nzVps * nyVps * nxVps), &val) );
-                PetscCall( PetscMalloc(sizeof(PetscInt) * (nzVps * nyVps * nxVps), &LIcol) );
+
+                PetscCall(PetscMalloc(sizeof(PetscScalar) * (nzVps * nyVps * nxVps), &val));
+                PetscCall(PetscMalloc(sizeof(PetscInt) * (nzVps * nyVps * nxVps), &LIcol));
 
                 PetscPrintf(PETSC_COMM_WORLD, "Pass here 916\n");
 
@@ -461,8 +439,7 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
                       x = delta * i - R_x;
                       y = delta * j - R_y;
                       z = delta * k - R_z;
-                      r1 = sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0) +
-                                (z - z0) * (z - z0));
+                      r1 = sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0) + (z - z0) * (z - z0));
 
                       colidx = 0;
 
@@ -475,9 +452,7 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
                             xx = delta * ii - R_x;
                             yy = delta * jj - R_y;
                             zz = delta * kk - R_z;
-                            r2 = sqrt((xx - x0) * (xx - x0) +
-                                      (yy - y0) * (yy - y0) +
-                                      (zz - z0) * (zz - z0));
+                            r2 = sqrt((xx - x0) * (xx - x0) + (yy - y0) * (yy - y0) + (zz - z0) * (zz - z0));
 
                             XX = xx - PP * 2.0 * R_x;
                             YY = yy - QQ * 2.0 * R_y;
@@ -488,34 +463,27 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
                               if (l != lloc) {
                                 if (r1 == tableR[0]) {
                                   pUlDeltaVl1 = tableUlDeltaV[l][0];
-                                } else if ( PetscRealPart(r1) >= PetscRealPart(rmax) ) {
+                                } else if (PetscRealPart(r1) >= PetscRealPart(rmax)) {
                                   pUlDeltaVl1 = 0.0;
                                 } else {
-                                  ispline_gen(tableR, tableUlDeltaV[l], count,
-                                              &r1, &pUlDeltaVl1, &DUlDelVl, 1,
+                                  ispline_gen(tableR, tableUlDeltaV[l], count, &r1, &pUlDeltaVl1, &DUlDelVl, 1,
                                               YDUlDeltaV[l]);
                                 }
 
                                 if (r2 == tableR[0]) {
                                   pUlDeltaVl2 = tableUlDeltaV[l][0];
-                                } else if ( PetscRealPart(r2) >= PetscRealPart(rmax) ) {
+                                } else if (PetscRealPart(r2) >= PetscRealPart(rmax)) {
                                   pUlDeltaVl2 = 0.0;
                                 } else {
-                                  ispline_gen(tableR, tableUlDeltaV[l], count,
-                                              &r2, &pUlDeltaVl2, &DUlDelVl, 1,
+                                  ispline_gen(tableR, tableUlDeltaV[l], count, &r2, &pUlDeltaVl2, &DUlDelVl, 1,
                                               YDUlDeltaV[l]);
                                 }
 
                                 for (m = -l; m <= l; m++) {
-                                  SpHarmonic = SphericalHarmonic(
-                                      x - x0, y - y0, z - z0, l, m, Rcut);
+                                  SpHarmonic = SphericalHarmonic(x - x0, y - y0, z - z0, l, m, Rcut);
                                   val[colidx] +=
-                                      (pUlDeltaVl1 *
-                                       SphericalHarmonic(x - x0, y - y0, z - z0,
-                                                         l, m, Rcut) *
-                                       pUlDeltaVl2 *
-                                       SphericalHarmonic(xx - x0, yy - y0,
-                                                         zz - z0, l, m, Rcut)) /
+                                      (pUlDeltaVl1 * SphericalHarmonic(x - x0, y - y0, z - z0, l, m, Rcut) *
+                                       pUlDeltaVl2 * SphericalHarmonic(xx - x0, yy - y0, zz - z0, l, m, Rcut)) /
                                       Dexact[l];
                                 }
                               }
@@ -547,10 +515,8 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
                              * linear index of column position if only 1 proc
                              * was employed
                              */
-                            LIcol[colidx] =
-                                roundf((ZZ + R_z) / delta) * n_x * n_y +
-                                roundf((YY + R_y) / delta) * n_x +
-                                roundf((XX + R_x) / delta);
+                            LIcol[colidx] = roundf((ZZ + R_z) / delta) * n_x * n_y + roundf((YY + R_y) / delta) * n_x +
+                                            roundf((XX + R_x) / delta);
 
                             /*
                              * only insert values whose magnitude is >=1e-16
@@ -561,8 +527,7 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
                           }
                       if (colidx > 0) {
                         AOApplicationToPetsc(aodmda, colidx, LIcol);
-                        ierr = MatSetValues(pSddft->HamiltonianOpr, 1, &LIrow,
-                                            colidx, LIcol, val, ADD_VALUES);
+                        ierr = MatSetValues(pSddft->HamiltonianOpr, 1, &LIrow, colidx, LIcol, val, ADD_VALUES);
                         CHKERRQ(ierr);
                       }
                     }
@@ -572,7 +537,6 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
             }
       }
 
-      
       PetscPrintf(PETSC_COMM_WORLD, "Pass here 1042\n");
       for (l = 0; l <= lmax; l++) {
         PetscPrintf(PETSC_COMM_WORLD, "Free memory 1044: l=%d, lmax=%d\n", l, lmax);
@@ -584,7 +548,6 @@ per_Laplacian_nlpsp_mat_init(SDDFT_OBJ *pSddft) {
       PetscFree(Dexact);
 
       PetscPrintf(PETSC_COMM_WORLD, "Pass here 1052\n");
-    
     }
   }
 

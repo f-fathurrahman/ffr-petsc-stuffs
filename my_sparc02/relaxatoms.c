@@ -1,7 +1,6 @@
 #include "isddft.h"
 #include "sddft.h"
 
-
 //           FormFunction_relaxAtoms: performs one electronic structure
 //           minimization for     //
 //                                      fixed atomic positions //
@@ -383,7 +382,6 @@ void NLCG_relaxAtoms(SDDFT_OBJ *pSddft) {
   return;
 }
 
-
 //                          Display_Atompos: prints the atomic positions //
 
 void Display_Atompos(SDDFT_OBJ *pSddft) {
@@ -402,7 +400,6 @@ void Display_Atompos(SDDFT_OBJ *pSddft) {
   VecRestoreArray(pSddft->Atompos, &pAtompos);
   return;
 }
-
 
 //                   Display_Relax: print the constraints on atomic relaxations
 //                   //
@@ -425,7 +422,6 @@ void Display_Relax(SDDFT_OBJ *pSddft) {
   VecRestoreArray(pSddft->mvAtmConstraint, &pmvAtmConstraint);
   return;
 }
-
 
 // SDDFT_Nonperiodic: function for nonperiodic Density Functional theory calculation
 PetscErrorCode SDDFT_Nonperiodic(SDDFT_OBJ *pSddft) {
@@ -512,9 +508,6 @@ PetscErrorCode SDDFT_Nonperiodic(SDDFT_OBJ *pSddft) {
   return 0;
 }
 
-
-
-
 //     SDDFT_Periodic: function for nonperiodic Density Functional theory
 //     calculation        //
 PetscErrorCode SDDFT_Periodic(SDDFT_OBJ *pSddft) {
@@ -540,7 +533,6 @@ PetscErrorCode SDDFT_Periodic(SDDFT_OBJ *pSddft) {
   VecCopy(pSddft->SuperposAtRho, pSddft->elecDensRho);
   PetscPrintf(PETSC_COMM_WORLD, "Pass here 541\n");
 
-
   /*
    * create nonlocal pseudopotential operator
    */
@@ -552,7 +544,6 @@ PetscErrorCode SDDFT_Periodic(SDDFT_OBJ *pSddft) {
 
   Wavefunctions_MatInit(pSddft);
   PetscPrintf(PETSC_COMM_WORLD, "Pass here 554\n");
-
 
   if (pSddft->RelaxFlag == 1) {
     /*
