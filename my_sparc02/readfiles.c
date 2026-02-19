@@ -271,7 +271,8 @@ void Read_ion(SDDFT_OBJ *pSddft) {
   strcat(ConfigFile, ".ion");
   pSddft->nAtoms = 0;
   PetscInt poscnt, index = 0;
-  PetscReal x0, y0, z0;
+  PetscReal x0_, y0_, z0_;
+  PetscScalar x0, y0, z0;
   pSddft->noetot = 0;
 
   int at = 0;
@@ -382,11 +383,16 @@ void Read_ion(SDDFT_OBJ *pSddft) {
     for (poscnt = 0; poscnt < pSddft->noa[at]; poscnt++) {
       pSddft->noetot += pSddft->noe[at];
 
-      if(fscanf(fConfFile,"%lf %lf %lf", &x0, &y0, &z0) != 3) {
+      if(fscanf(fConfFile,"%lf %lf %lf", &x0_, &y0_, &z0_) != 3) {
         SETERRQ(PETSC_COMM_WORLD,1,"Failed reading coordinates");
       }
 
-      PetscPrintf(PETSC_COMM_WORLD, "Atompos = %f %f %f\n", x0, y0, z0);
+      // Convert to PetscScalar
+      x0 = PetscCMPLX(x0_, 0.0);
+      y0 = PetscCMPLX(y0_, 0.0);
+      z0 = PetscCMPLX(z0_, 0.0);
+      PetscPrintf(PETSC_COMM_WORLD, "Atompos = %f %f %f\n",
+        PetscRealPart(x0), PetscRealPart(y0), PetscRealPart(z0));
 
       VecSetValues(pSddft->Atompos, 1, &index, &x0, INSERT_VALUES); index++;
       VecSetValues(pSddft->Atompos, 1, &index, &y0, INSERT_VALUES); index++;

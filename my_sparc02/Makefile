@@ -5,7 +5,7 @@ CC = mpicc
 
 INC_FLAGS = -I$(PETSC_HOME)/include 
 #CFLAGS = -Wall -O3 -D_DEBUG -g # -O0 -fsanitize=address
-CFLAGS = -Wall -O0 -D_DEBUG -g -O0 -fsanitize=address
+CFLAGS = -Wall -O0 -D_DEBUG -g -O0 -fsanitize=address,undefined
 
 LDLIBS  = -Wl,-rpath,$(PETSC_HOME)/lib \
 -L$(PETSC_HOME)/lib \
@@ -14,10 +14,12 @@ LDLIBS  = -Wl,-rpath,$(PETSC_HOME)/lib \
 
 MY_OBJS = 
 
+# XXX Need to use .o extension
 OBJLIBS = \
 ExchangeCorrelation.o density.o forces.o kPointHamiltonian.o  mixing.o nonlocal.o poisson.o \
 relaxatoms.o  spline.o chebyshev.o energy.o initObjs.o  multipole.o  occupation.o  readfiles.o  scf.o \
 per_Laplacian_nlpsp_mat_init.o \
+PeriodicChargDensB_VecInit.o \
 $(MY_OBJS)
 
 all: lib

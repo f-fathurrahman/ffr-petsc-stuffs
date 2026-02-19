@@ -391,8 +391,10 @@ void Display_Atompos(SDDFT_OBJ *pSddft) {
   VecGetArray(pSddft->Atompos, &pAtompos);
   PetscPrintf(PETSC_COMM_WORLD, "Atomic positions (Bohr) \n");
   for (poscnt = 0; poscnt < pSddft->nAtoms; poscnt++) {
-    PetscPrintf(PETSC_COMM_WORLD, "%9.9f \t %9.9f \t %9.9f \n", pAtompos[Index], pAtompos[Index + 1],
-                pAtompos[Index + 2]);
+    PetscPrintf(PETSC_COMM_WORLD, "%9.9f \t %9.9f \t %9.9f \n",
+      PetscRealPart(pAtompos[Index]),
+      PetscRealPart(pAtompos[Index+1]),
+      PetscRealPart(pAtompos[Index+2]));
     Index = Index + 3;
   }
   PetscPrintf(PETSC_COMM_WORLD, "\n");
