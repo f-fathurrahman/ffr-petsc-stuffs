@@ -5,7 +5,7 @@ CC = mpicc
 
 INC_FLAGS = -I$(PETSC_HOME)/include 
 #CFLAGS = -Wall -O3 -D_DEBUG -g # -O0 -fsanitize=address
-CFLAGS = -Wall -O0 -D_DEBUG -g -O0 -fsanitize=address,undefined
+CFLAGS = -Wall -O0 -g -O0 #-fsanitize=address,undefined
 
 LDLIBS  = -Wl,-rpath,$(PETSC_HOME)/lib \
 -L$(PETSC_HOME)/lib \

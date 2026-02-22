@@ -1,6 +1,7 @@
 install
 sources
 
+ORIG_*
 sparc02_new
 LOG_*
 LOG
